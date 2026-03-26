@@ -21,6 +21,7 @@ from core import (
     get_referral_code, get_user_referrals, count_user_referrals,
     get_user_referral_stats, get_global_referral_stats, get_all_referral_earnings,
     admin_menu_kb, admin_user_kb, admin_settings_kb, admin_referral_kb,
+    admin_group_users_kb, admin_group_money_kb, admin_group_stats_kb, admin_group_msg_kb,
     admin_topsort_kb, admin_profit_kb, back_kb, confirm_action_kb,
     get_profit_stats,
     ADMIN_PASSWORD, SUPER_ADMIN_IDS, ITEMS_PER_PAGE
@@ -94,6 +95,47 @@ async def admin_logout_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     lang = await _lang(q.from_user.id)
     await remove_admin_session(q.from_user.id)
     await q.edit_message_text(t(lang,"adm_logged_out"))
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# ADMIN GROUP MENUS
+# ════════════════════════════════════════════════════════════════════════════
+
+async def admin_group_users_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "👥 " + ("إدارة المستخدمين" if lang=="ar" else "User Management"),
+        reply_markup=admin_group_users_kb(lang)
+    )
+
+async def admin_group_money_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "💰 " + ("المدفوعات والأموال" if lang=="ar" else "Payments & Money"),
+        reply_markup=admin_group_money_kb(lang)
+    )
+
+async def admin_group_stats_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "📊 " + ("الإحصائيات" if lang=="ar" else "Statistics"),
+        reply_markup=admin_group_stats_kb(lang)
+    )
+
+async def admin_group_msg_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "📢 " + ("البث والمراسلة" if lang=="ar" else "Broadcast & Messaging"),
+        reply_markup=admin_group_msg_kb(lang)
+    )
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -1217,5 +1259,9 @@ def register(app):
         ("^adm:profit:monthly$",        admin_profit_monthly_cb),
         ("^adm:profit:deposits$",       admin_profit_deposits_cb),
         ("^adm:profit:markup$",         admin_profit_markup_cb),
+        ("^adm:grp:users$",             admin_group_users_cb),
+        ("^adm:grp:money$",             admin_group_money_cb),
+        ("^adm:grp:stats$",             admin_group_stats_cb),
+        ("^adm:grp:msg$",               admin_group_msg_cb),
     ]:
         app.add_handler(CallbackQueryHandler(handler, pattern=pattern))

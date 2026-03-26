@@ -112,6 +112,9 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     coin    = ctx.user_data.get("pay_coin", "USDT")
     network = ctx.user_data.get("pay_network","")
+
+    pay_currency_combined = f"{coin}/{network}" if network else coin
+
     fee     = ctx.user_data.get("pay_fee", 0)
     life    = ctx.user_data.get("pay_life", 30)
     under   = ctx.user_data.get("pay_under", 2.5)
@@ -127,7 +130,7 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         res = await oxapay.create_invoice(
             amount=amount,
-            pay_currency=coin,
+            pay_currency=pay_currency_combined,
             order_id=order_ref,
             description=f"Deposit {amount} USD",
             lifetime=life,

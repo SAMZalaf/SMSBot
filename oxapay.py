@@ -75,7 +75,12 @@ class OxaPay:
 
     async def merchant_info(self) -> dict:
         """Get merchant account info."""
-        return await self._post("/merchants/balance", {})
+        try:
+            return await self._post("/merchant/balance", {})
+        except OxaPayError as e:
+            if "404" in str(e):
+                return await self._post("/merchants/balance", {})
+            raise
 
     # ── Accepted Currencies ───────────────────────────────────────────────────
 
@@ -130,6 +135,12 @@ class OxaPay:
         }
         if callback_url: payload["callbackUrl"] = callback_url
         if return_url:   payload["returnUrl"]   = return_url
+        # If network is provided, add it
+        if pay_currency and "/" in pay_currency:
+             # some users might pass "USDT/BEP20"
+             curr, net = pay_currency.split("/", 1)
+             payload["payCurrency"] = curr
+             payload["network"] = net
         return await self._post("/merchants/request", payload)
 
     # ── Check Payment ─────────────────────────────────────────────────────────

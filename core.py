@@ -178,6 +178,13 @@ async def init_db():
         );
         CREATE INDEX IF NOT EXISTS idx_sk_active ON smspool_keys(is_active);
         CREATE INDEX IF NOT EXISTS idx_re_referrer  ON referral_earnings(referrer_id);
+        CREATE TABLE IF NOT EXISTS user_antispam (
+            telegram_id     INTEGER PRIMARY KEY,
+            last_click_at   TIMESTAMP,
+            spam_count      INTEGER DEFAULT 0,
+            ban_count       INTEGER DEFAULT 0,
+            banned_until    TIMESTAMP
+        );
         """)
         for k, v in [
             ("bot_active","1"),("maintenance_msg_ar","البوت تحت الصيانة"),
@@ -2180,6 +2187,9 @@ STRINGS = {
 
   "inline_search_title": "🔍 Search service or country",
   "inline_no_key":       "Type a service or country name to search",
+
+  "antispam_warn":  "⚠️ Please slow down! Don't click too fast.",
+  "antispam_ban":   "🚫 Your account is temporarily suspended for {mins} minutes due to excessive rapid clicking.",
 },
 }
 
@@ -2316,26 +2326,58 @@ def profile_kb(lang):
                _row(Btn(t(lang,"back"),           callback_data="mm")))
 
 def admin_menu_kb(lang):
+    # Grouped as requested by user
     return _kb(
-        _row(Btn(t(lang,"btn_adm_stats"),     callback_data="adm:st")),
+        # 1. User Management
+        _row(Btn("👥 " + ("إدارة المستخدمين" if lang=="ar" else "User Management"), callback_data="adm:grp:users")),
+        # 2. Payments & Money
+        _row(Btn("💰 " + ("المدفوعات والأموال" if lang=="ar" else "Payments & Money"), callback_data="adm:grp:money")),
+        # 3. Stats
+        _row(Btn("📊 " + ("الإحصائيات" if lang=="ar" else "Statistics"), callback_data="adm:grp:stats")),
+        # 4. Broadcast & Messaging
+        _row(Btn("📢 " + ("البث والمراسلة" if lang=="ar" else "Broadcast & Messaging"), callback_data="adm:grp:msg")),
+        # 5. SMSPool Settings
+        _row(Btn("🔑 " + ("إعدادات SMSPool" if lang=="ar" else "SMSPool Settings"), callback_data="adm:sk:list")),
+        # Active Numbers & Bot Settings
+        _row(Btn(t(lang,"btn_adm_active"),   callback_data="adm:an:0"),
+             Btn(t(lang,"btn_adm_settings"),  callback_data="adm:ss")),
+        # Logout
+        _row(Btn(t(lang,"btn_adm_logout"),    callback_data="adm:lo"),
+             Btn(t(lang,"back"),              callback_data="mm")),
+    )
+
+def admin_group_users_kb(lang):
+    return _kb(
         _row(Btn(t(lang,"btn_adm_users"),    callback_data="adm:ul:0"),
              Btn(t(lang,"btn_adm_search"),   callback_data="adm:sr")),
         _row(Btn(t(lang,"btn_adm_usearch"),  callback_data="adm:usearch"),
              Btn(t(lang,"btn_adm_top_sort"), callback_data="adm:topsort")),
-        _row(Btn(t(lang,"btn_adm_active"),   callback_data="adm:an:0"),
-             Btn(t(lang,"btn_adm_top"),      callback_data="adm:tp")),
-        _row(Btn(t(lang,"btn_adm_profits"),  callback_data="adm:profit:m"),
-             Btn(t(lang,"btn_adm_smspool"),  callback_data="adm:sk:list")),
+        _row(Btn(t(lang,"btn_adm_top"),      callback_data="adm:tp")),
+        _row(Btn(t(lang,"back"),             callback_data="adm:m")),
+    )
+
+def admin_group_money_kb(lang):
+    return _kb(
         _row(Btn(t(lang,"btn_adm_txs"),       callback_data="adm:t:0"),
              Btn(t(lang,"btn_adm_purchases"), callback_data="adm:ap:0")),
         _row(Btn(t(lang,"btn_adm_payments"),  callback_data="adm:pay:m"),
              Btn(t(lang,"btn_adm_pay_methods"),callback_data="adm:pm:l")),
         _row(Btn(t(lang,"btn_adm_ref"),       callback_data="adm:ref:m")),
-        _row(Btn(t(lang,"btn_adm_broadcast"), callback_data="adm:bc"),
-             Btn(t(lang,"btn_adm_msg_user"),  callback_data="adm:mu")),
-        _row(Btn(t(lang,"btn_adm_settings"),  callback_data="adm:ss")),
-        _row(Btn(t(lang,"btn_adm_logout"),    callback_data="adm:lo"),
-             Btn(t(lang,"back"),              callback_data="mm")),
+        _row(Btn(t(lang,"back"),             callback_data="adm:m")),
+    )
+
+def admin_group_stats_kb(lang):
+    return _kb(
+        _row(Btn(t(lang,"btn_adm_stats"),     callback_data="adm:st")),
+        _row(Btn(t(lang,"btn_adm_profits"),  callback_data="adm:profit:m")),
+        _row(Btn(t(lang,"back"),             callback_data="adm:m")),
+    )
+
+def admin_group_msg_kb(lang):
+    return _kb(
+        _row(Btn(t(lang,"btn_adm_broadcast"), callback_data="adm:bc")),
+        _row(Btn(t(lang,"btn_adm_msg_user"),  callback_data="adm:mu")),
+        _row(Btn(t(lang,"back"),             callback_data="adm:m")),
     )
 
 def admin_user_kb(lang, uid, is_banned):
