@@ -181,6 +181,7 @@ async def init_db():
         CREATE TABLE IF NOT EXISTS user_antispam (
             telegram_id     INTEGER PRIMARY KEY,
             last_click_at   TIMESTAMP,
+            series_start_at TIMESTAMP,
             spam_count      INTEGER DEFAULT 0,
             ban_count       INTEGER DEFAULT 0,
             banned_until    TIMESTAMP

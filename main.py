@@ -62,7 +62,7 @@ async def payment_poller_task(app: Application):
 
 # ── Anti-Spam Middleware Logic ────────────────────────────────────────────────
 # Use a simple in-memory cache for performance
-SPAM_CACHE = {} # {tid: {"last_click": datetime, "spam_count": int, "banned_until": datetime}}
+SPAM_CACHE = {} # {tid: {"last_click": datetime, "series_start": datetime, "spam_count": int, "ban_count": int, "banned_until": datetime}}
 
 async def antispam_middleware(update, ctx):
     if not update.effective_user or update.effective_user.is_bot:
@@ -89,6 +89,7 @@ async def antispam_middleware(update, ctx):
             if row:
                 state = {
                     "last_click": datetime.fromisoformat(row["last_click_at"]),
+                    "series_start": datetime.fromisoformat(row["series_start_at"]) if row.get("series_start_at") else now,
                     "spam_count": row["spam_count"],
                     "ban_count": row["ban_count"],
                     "banned_until": datetime.fromisoformat(row["banned_until"]) if row["banned_until"] else None
@@ -96,12 +97,13 @@ async def antispam_middleware(update, ctx):
             else:
                 state = {
                     "last_click": now,
+                    "series_start": now,
                     "spam_count": 0,
                     "ban_count": 0,
                     "banned_until": None
                 }
-                await db.execute("INSERT INTO user_antispam (telegram_id, last_click_at) VALUES (?,?)",
-                                 (tid, now.isoformat()))
+                await db.execute("INSERT INTO user_antispam (telegram_id, last_click_at, series_start_at) VALUES (?,?,?)",
+                                 (tid, now.isoformat(), now.isoformat()))
                 await db.commit()
         SPAM_CACHE[tid] = state
 
@@ -116,65 +118,70 @@ async def antispam_middleware(update, ctx):
                 await db.execute("UPDATE user_antispam SET banned_until=NULL WHERE telegram_id=?", (tid,))
                 await db.commit()
 
-    # Check spamming
-    diff = (now - state["last_click"]).total_seconds()
+    # Logic:
+    # Reset series if > 10s gap
+    if (now - state["last_click"]).total_seconds() > 10.0:
+        state["spam_count"] = 0
+        state["series_start"] = now
+
     state["last_click"] = now
+    state["spam_count"] += 1
+    duration = (now - state["series_start"]).total_seconds()
 
-    if diff < 0.6:
-        state["spam_count"] += 1
-        if state["spam_count"] >= 5:
-            # Apply ban
-            state["ban_count"] += 1
-            durations = [10, 120, 1440]
-            mins = durations[min(state["ban_count"]-1, 2)]
-            state["banned_until"] = now + timedelta(minutes=mins)
-            state["spam_count"] = 0
+    is_banned = False
+    is_warned = False
 
-            async with aiosqlite.connect(DATABASE_PATH) as db:
-                await db.execute("UPDATE user_antispam SET banned_until=?, ban_count=?, spam_count=0, last_click_at=? WHERE telegram_id=?",
-                                 (state["banned_until"].isoformat(), state["ban_count"], now.isoformat(), tid))
-                await db.commit()
+    if state["ban_count"] == 0:
+        # Click 9 in 2s -> Warn
+        if state["spam_count"] == 9 and duration <= 2.0:
+            is_warned = True
+        # Click 17 in 7s -> Ban
+        if state["spam_count"] >= 17 and duration <= 7.0:
+            is_banned = True
+    else:
+        # Click 9 in 2s -> Ban
+        if state["spam_count"] >= 9 and duration <= 2.0:
+            is_banned = True
 
-            # Notify user
-            u = await get_user(tid)
-            lang = u.get("language", "ar") if u else "ar"
+    if is_banned:
+        state["ban_count"] += 1
+        durations = [10, 120, 1440]
+        mins = durations[min(state["ban_count"]-1, 2)]
+        state["banned_until"] = now + timedelta(minutes=mins)
+        state["spam_count"] = 0
+
+        async with aiosqlite.connect(DATABASE_PATH) as db:
+            await db.execute("UPDATE user_antispam SET banned_until=?, ban_count=?, spam_count=0, last_click_at=?, series_start_at=? WHERE telegram_id=?",
+                             (state["banned_until"].isoformat(), state["ban_count"], now.isoformat(), now.isoformat(), tid))
+            await db.commit()
+
+        # Notify user
+        u = await get_user(tid)
+        lang = u.get("language", "ar") if u else "ar"
+        try:
+            await ctx.bot.send_message(tid, t(lang, "antispam_ban", mins=mins))
+        except: pass
+
+        # Notify admins
+        for aid in SUPER_ADMIN_IDS:
             try:
-                await ctx.bot.send_message(tid, t(lang, "antispam_ban", mins=mins))
+                await ctx.bot.send_message(aid, f"🚫 AntiSpam: User {tid} ({update.effective_user.first_name}) banned for {mins}m")
             except: pass
 
-            # Notify admins
-            for aid in SUPER_ADMIN_IDS:
-                try:
-                    await ctx.bot.send_message(aid, f"🚫 AntiSpam: User {tid} ({update.effective_user.first_name}) banned for {mins}m")
-                except: pass
+        raise ApplicationHandlerStop()
 
-            raise ApplicationHandlerStop()
-        else:
-            async with aiosqlite.connect(DATABASE_PATH) as db:
-                await db.execute("UPDATE user_antispam SET spam_count=?, last_click_at=? WHERE telegram_id=?",
-                                 (state["spam_count"], now.isoformat(), tid))
-                await db.commit()
+    if is_warned:
+        u = await get_user(tid)
+        lang = u.get("language", "ar") if u else "ar"
+        try:
+            await ctx.bot.send_message(tid, t(lang, "antispam_warn"))
+        except: pass
 
-            if state["spam_count"] == 3:
-                u = await get_user(tid)
-                lang = u.get("language", "ar") if u else "ar"
-                try:
-                    await ctx.bot.send_message(tid, t(lang, "antispam_warn"))
-                except: pass
-    else:
-        # Reset spam count
-        if state["spam_count"] > 0:
-            state["spam_count"] = 0
-            async with aiosqlite.connect(DATABASE_PATH) as db:
-                await db.execute("UPDATE user_antispam SET spam_count=0, last_click_at=? WHERE telegram_id=?",
-                                 (now.isoformat(), tid))
-                await db.commit()
-        else:
-             # Just update last_click in DB
-             async with aiosqlite.connect(DATABASE_PATH) as db:
-                await db.execute("UPDATE user_antispam SET last_click_at=? WHERE telegram_id=?",
-                                 (now.isoformat(), tid))
-                await db.commit()
+    # Update DB
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        await db.execute("UPDATE user_antispam SET spam_count=?, last_click_at=?, series_start_at=? WHERE telegram_id=?",
+                         (state["spam_count"], state["last_click"].isoformat(), state["series_start"].isoformat(), tid))
+        await db.commit()
 
 
 async def post_init(app: Application):

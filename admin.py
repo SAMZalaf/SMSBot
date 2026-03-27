@@ -378,7 +378,7 @@ async def admin_unban_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     from core import DATABASE_PATH
     import aiosqlite
     async with aiosqlite.connect(DATABASE_PATH) as db:
-        await db.execute("DELETE FROM user_antispam WHERE telegram_id=?", (tid,))
+        await db.execute("UPDATE user_antispam SET banned_until=NULL, spam_count=0, ban_count=0 WHERE telegram_id=?", (tid,))
         await db.commit()
 
     # Clear cache
