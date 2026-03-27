@@ -371,9 +371,22 @@ async def admin_unban_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     uid  = int(q.data.split(":")[-1])
     user = await get_user_by_id(uid)
     if not user: await q.answer(t(lang,"adm_not_found"),show_alert=True); return
-    await update_user(user["telegram_id"], is_banned=0)
+    tid  = user["telegram_id"]
+    await update_user(tid, is_banned=0)
+
+    # Clear anti-spam ban
+    from core import DATABASE_PATH
+    import aiosqlite
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        await db.execute("DELETE FROM user_antispam WHERE telegram_id=?", (tid,))
+        await db.commit()
+
+    # Clear cache
+    from main import SPAM_CACHE
+    SPAM_CACHE.pop(tid, None)
+
     try:
-        await ctx.bot.send_message(user["telegram_id"],
+        await ctx.bot.send_message(tid,
             t(user.get("language","ar"), "notify_unbanned"), parse_mode="HTML")
     except: pass
     await q.edit_message_text(t(lang,"adm_unban_ok",user=user_display(user)),
@@ -907,12 +920,27 @@ async def admin_profit_markup_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE)
 
 async def _full_user_text(lang, u):
     """Build rich user profile text with all stats."""
-    from core import get_user_detailed_stats, get_user_referral_stats, _q
+    from core import get_user_detailed_stats, get_user_referral_stats, _q, DATABASE_PATH
+    import aiosqlite
     uid   = u["id"]
-    stats = await get_user_detailed_stats(u["telegram_id"])
-    refs  = await get_user_referral_stats(u["telegram_id"])
+    tid   = u["telegram_id"]
+    stats = await get_user_detailed_stats(tid)
+    refs  = await get_user_referral_stats(tid)
     by_s  = stats["by_status"] if stats else {}
     done  = by_s.get("completed",{}).get("count",0)
+
+    # Check anti-spam status
+    spam_status = "❌"
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cur = await db.execute("SELECT banned_until FROM user_antispam WHERE telegram_id=?", (tid,))
+        row = await cur.fetchone()
+        if row and row["banned_until"]:
+            from datetime import datetime
+            bu = datetime.fromisoformat(row["banned_until"])
+            if datetime.now() < bu:
+                spam_status = f"✅ ({fmt_date(row['banned_until'])})"
+
     return t(lang,"adm_user_full",
         tid=u["telegram_id"],
         name=user_display(u), uname=_uname(u),
@@ -923,6 +951,7 @@ async def _full_user_text(lang, u):
         joined=fmt_date(u.get("created_at","")),
         active=fmt_date(u.get("last_active","")),
         banned="✅" if u.get("is_banned") else "❌",
+        spam_status=spam_status,
         note=u.get("note") or "—"
     )
 

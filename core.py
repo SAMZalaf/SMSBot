@@ -1034,7 +1034,8 @@ STRINGS = {
     "─────────────────\n"
     "📅 انضم: <b>{joined}</b>\n"
     "🕐 آخر نشاط: <b>{active}</b>\n"
-    "🔴 محظور: {banned}\n"
+        "🔴 محظور إدارياً: {banned}\n"
+        "🚫 حظر سبام: {spam_status}\n"
     "📝 ملاحظة: {note}"
   ),
   "adm_top_by_spent":    "🏆 <b>الترتيب حسب الإنفاق</b>",
@@ -1669,7 +1670,8 @@ STRINGS = {
     "─────────────────\n"
     "📅 Joined: <b>{joined}</b>\n"
     "🕐 Last Active: <b>{active}</b>\n"
-    "🔴 Banned: {banned}\n"
+        "🔴 Admin Banned: {banned}\n"
+        "🚫 Spam Banned: {spam_status}\n"
     "📝 Note: {note}"
   ),
   "adm_top_by_spent":    "🏆 <b>Ranked by Spending</b>",

@@ -154,6 +154,13 @@ async def antispam_middleware(update, ctx):
                 await db.execute("UPDATE user_antispam SET spam_count=?, last_click_at=? WHERE telegram_id=?",
                                  (state["spam_count"], now.isoformat(), tid))
                 await db.commit()
+
+            if state["spam_count"] == 3:
+                u = await get_user(tid)
+                lang = u.get("language", "ar") if u else "ar"
+                try:
+                    await ctx.bot.send_message(tid, t(lang, "antispam_warn"))
+                except: pass
     else:
         # Reset spam count
         if state["spam_count"] > 0:
