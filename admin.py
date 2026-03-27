@@ -14,6 +14,7 @@ from telegram.ext import (
 from core import (
     t, fmt_date, fmt_list, tx_name, tx_icon, user_display, status_label,
     get_user, get_user_by_id, update_user, update_balance, get_setting, set_setting,
+    start_cmd,
     get_all_settings, get_all_users, count_users, search_users, get_top_users,
     get_user_purchases, get_user_transactions, get_user_detailed_stats,
     get_all_purchases, get_all_transactions, count_all_purchases,
@@ -70,7 +71,10 @@ async def admin_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def recv_pw(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     lang = await _lang(update.effective_user.id)
-    pw   = (update.message.text or "").strip()
+    text = (update.message.text or "").strip()
+    if text == "/start":
+        return await start_cmd(update, ctx)
+    pw = text
     try: await update.message.delete()
     except: pass
     if pw == ADMIN_PASSWORD:
@@ -136,6 +140,9 @@ async def admin_group_msg_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         "📢 " + ("البث والمراسلة" if lang=="ar" else "Broadcast & Messaging"),
         reply_markup=admin_group_msg_kb(lang)
     )
+
+async def end_conv(update, context):
+    return END
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -323,7 +330,7 @@ async def recv_reason(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         tx_amt = -amt; tx_t = "admin_remove"; msg_key = "adm_bal_removed"
 
     new_bal = await update_balance(tid, tx_amt, tx_t, reason,
-                                    admin_actor=update.effective_user.id)
+                                    actor=update.effective_user.id)
     if new_bal is False:
         await update.message.reply_text(t(lang,"adm_bal_err"),
                                          reply_markup=back_kb(lang,f"adm:u:{uid}"))
@@ -1244,7 +1251,7 @@ def register(app):
             S_REF_PCT:    [MessageHandler(filters.TEXT & ~filters.COMMAND, recv_ref_pct)],
             S_USEARCH2:   [MessageHandler(filters.TEXT & ~filters.COMMAND, recv_usearch2)],
         },
-        fallbacks=[CommandHandler("start", lambda u,c: END)],
+        fallbacks=[CommandHandler("start", start_cmd), MessageHandler(filters.COMMAND, end_conv)],
         per_message=False, allow_reentry=True,
     )
     app.add_handler(conv)
@@ -1253,7 +1260,8 @@ def register(app):
     app.add_handler(ConversationHandler(
         entry_points=[CommandHandler("admin", admin_cmd)],
         states={S_PW: [MessageHandler(filters.TEXT & ~filters.COMMAND, recv_pw)]},
-        fallbacks=[], per_message=False, allow_reentry=True,
+        fallbacks=[CommandHandler("start", start_cmd)],
+        per_message=False, allow_reentry=True,
     ), group=1)
 
     # Regular callbacks

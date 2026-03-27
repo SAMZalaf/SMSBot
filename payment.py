@@ -12,7 +12,7 @@ from telegram.ext import (
     ConversationHandler, MessageHandler, filters, CommandHandler
 )
 from core import (
-    t, fmt_date, get_user, update_balance,
+    t, fmt_date, get_user, update_balance, start_cmd,
     get_payment_methods, get_payment_method,
     create_payment, get_payment_by_track, update_payment,
     get_user_payments, get_setting, is_admin,
@@ -36,6 +36,12 @@ async def _lang(tid):
 # ════════════════════════════════════════════════════════════════════════════
 
 async def pay_menu_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    # Cancel any active conversation states
+    if ctx.user_data:
+        for key in list(ctx.user_data.keys()):
+            if not key.startswith("_"):
+                ctx.user_data.pop(key)
+
     q = update.callback_query
     await q.answer()
     lang = await _lang(q.from_user.id)
@@ -389,7 +395,7 @@ def register(app):
         states={
             S_AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, pay_recv_amount)],
         },
-        fallbacks=[CommandHandler("start", lambda u,c: END)],
+        fallbacks=[CommandHandler("start", start_cmd)],
         per_message=False, allow_reentry=True,
     )
     app.add_handler(conv)

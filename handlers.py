@@ -72,6 +72,12 @@ async def _send_or_edit(update, text, kb=None, parse_mode="HTML"):
 # ════════════════════════════════════════════════════════════════════════════
 
 async def start_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    # Cancel any active conversation states
+    if ctx.user_data:
+        for key in list(ctx.user_data.keys()):
+            if not key.startswith("_"): # Convention: persistent data starts with _
+                ctx.user_data.pop(key)
+
     user = await _ensure_user(update)
     if await _check_banned(user, update): return
     lang  = user.get("language", "ar")
@@ -108,6 +114,9 @@ async def start_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     custom_welcome = await get_setting(f"welcome_{lang}")
     text = custom_welcome if custom_welcome else t(lang, "welcome", name=name, bal=bal)
     await _send_or_edit(update, text, main_menu_kb(lang, adm))
+
+    from telegram.ext import ConversationHandler
+    return ConversationHandler.END
 
 
 async def get_user_by_referral_code_safe(code: str):

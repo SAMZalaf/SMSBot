@@ -19,7 +19,7 @@ from telegram.ext import (
     ConversationHandler, MessageHandler, filters
 )
 from core import (
-    t, fmt_date, user_display, is_admin,
+    t, fmt_date, user_display, is_admin, start_cmd,
     get_user, get_user_by_id, search_users, get_all_users, count_users,
     get_smspool_keys, get_active_smspool_key,
     add_smspool_key, delete_smspool_key, set_active_smspool_key,
@@ -42,6 +42,7 @@ async def _lang(tid):
     return u.get("language","ar") if u else "ar"
 
 async def _require_admin(update, ctx):
+    if not update.effective_user: return "ar", False
     tid  = update.effective_user.id
     lang = await _lang(tid)
     if not await is_admin(tid):
@@ -127,8 +128,9 @@ async def recv_sk_key(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         valid = False
 
     if not valid:
-        await update.message.reply_text(t(lang,"adm_smspool_invalid"))
-        return S_SK_KEY
+        await update.message.reply_text(t(lang,"adm_smspool_invalid"),
+                                         reply_markup=back_kb(lang,"adm:sk:list"))
+        return END
 
     ctx.user_data["new_sk_key"] = key
     await update.message.reply_text(t(lang,"adm_smspool_enter_label"))
@@ -621,6 +623,7 @@ def register(app):
         },
         fallbacks=[
             CallbackQueryHandler(broadcast_menu_cb, pattern="^adm:bc$"),
+            CommandHandler("start", start_cmd),
         ],
         per_message=False, allow_reentry=True,
     )

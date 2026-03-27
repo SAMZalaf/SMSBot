@@ -13,7 +13,7 @@ from telegram.ext import (
 )
 from core import (
     t, fmt_date, user_display, is_admin, get_user_by_id,
-    get_setting, set_setting,
+    get_setting, set_setting, start_cmd,
     get_payment_methods, get_payment_method, add_payment_method,
     update_payment_method, delete_payment_method, toggle_payment_method,
     get_all_payments, get_payment_stats,
@@ -403,6 +403,7 @@ async def adm_pm_delete_ok_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await q.edit_message_text(t(lang,"adm_pm_deleted"),
                                reply_markup=back_kb(lang,"adm:pm:l"))
 
+async def _pm_conv_end(u, c): return END
 
 # ── ADD PAYMENT METHOD WIZARD ─────────────────────────────────────────────────
 
@@ -582,7 +583,9 @@ def register(app):
             ],
         },
         fallbacks=[
-            CallbackQueryHandler(lambda u,c: END, pattern="^adm:pm:l$"),
+            CallbackQueryHandler(_pm_conv_end, pattern="^adm:pm:l$"),
+            CommandHandler("start", start_cmd),
+            MessageHandler(filters.COMMAND, _pm_conv_end),
         ],
         per_message=False, allow_reentry=True,
     )

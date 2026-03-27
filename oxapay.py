@@ -39,11 +39,15 @@ class OxaPay:
 
     async def _post(self, path: str, data: dict) -> dict:
         payload = {"merchant": self.key, **data}
+        headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
         async with aiohttp.ClientSession() as s:
             async with s.post(
                 f"{self.base}{path}",
                 json=payload,
-                headers={"Content-Type": "application/json"},
+                headers=headers,
                 timeout=aiohttp.ClientTimeout(total=20),
             ) as r:
                 if r.status != 200:
@@ -58,10 +62,14 @@ class OxaPay:
                 return resp
 
     async def _get(self, path: str, params: dict = None) -> dict:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
         async with aiohttp.ClientSession() as s:
             async with s.get(
                 f"{self.base}{path}",
                 params=params or {},
+                headers=headers,
                 timeout=aiohttp.ClientTimeout(total=20),
             ) as r:
                 if r.status != 200:
@@ -75,12 +83,19 @@ class OxaPay:
 
     async def merchant_info(self) -> dict:
         """Get merchant account info."""
-        try:
-            return await self._post("/merchant/balance", {})
-        except OxaPayError as e:
-            if "404" in str(e):
-                return await self._post("/merchants/balance", {})
-            raise
+        # The endpoint for balance is often /merchants/balance or /payout/balance
+        # Based on logs, it might be returning 404/403.
+        # Let's try to be resilient.
+        endpoints = ["/merchants/balance", "/merchant/balance", "/payout/balance"]
+        last_err = None
+        for ep in endpoints:
+            try:
+                return await self._post(ep, {})
+            except OxaPayError as e:
+                last_err = e
+                continue
+        if last_err: raise last_err
+        return {}
 
     # ── Accepted Currencies ───────────────────────────────────────────────────
 

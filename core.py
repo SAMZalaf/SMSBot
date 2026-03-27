@@ -2229,7 +2229,8 @@ def user_display(u):
 # SECTION 4 ─ KEYBOARDS
 # All callback patterns use short prefixes (max 64 bytes guaranteed)
 # ════════════════════════════════════════════════════════════════════════════
-from telegram import InlineKeyboardButton as Btn, InlineKeyboardMarkup as KB
+from telegram import InlineKeyboardButton as Btn, InlineKeyboardMarkup as KB, Update
+from telegram.ext import ContextTypes
 
 def _row(*btns): return list(btns)
 def _kb(*rows): return KB(list(rows))
@@ -2382,6 +2383,10 @@ def admin_group_msg_kb(lang):
         _row(Btn(t(lang,"btn_adm_msg_user"),  callback_data="adm:mu")),
         _row(Btn(t(lang,"back"),             callback_data="adm:m")),
     )
+
+async def start_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    from handlers import start_cmd as actual_start
+    return await actual_start(update, ctx)
 
 def admin_user_kb(lang, uid, is_banned):
     """Full interactive user management panel."""

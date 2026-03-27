@@ -16,7 +16,6 @@ import handlers, admin, admin_payment, payment, admin_tools
 logging.basicConfig(format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s", level=logging.INFO)
 log = logging.getLogger(__name__)
 
-
 async def sms_checker(app: Application):
     log.info("SMS checker started")
     while True:
@@ -35,13 +34,9 @@ async def sms_checker(app: Application):
                 status = res.get("status", 0)
                 if status == 1:
                     code = res.get("sms",""); full = res.get("full_sms", code)
-                    await update_purchase(oid, status="completed", sms_code=code, sms_full=full,
-                                          completed_at=now.isoformat())
+                    await update_purchase(oid, status="completed", sms_code=code, sms_full=full, completed_at=now.isoformat())
                     from core import t
-                    try:
-                        await app.bot.send_message(tid, t(lang,"sms_auto_notify",
-                            num=p.get("phone_number",""), service=p.get("service_name",""),
-                            code=code, full=full), parse_mode="HTML")
+                    try: await app.bot.send_message(tid, t(lang,"sms_auto_notify", num=p.get("phone_number",""), service=p.get("service_name",""), code=code, full=full), parse_mode="HTML")
                     except: pass
                 elif status == 3 or age_s > max_mins * 60:
                     amt = p.get("cost_display", 0)
@@ -49,39 +44,26 @@ async def sms_checker(app: Application):
                     await update_balance(tid, amt, "refund", f"Auto-refund {oid}", oid)
                     if status != 3:
                         from core import t
-                        try: await app.bot.send_message(tid, t(lang,"auto_cancel",
-                            num=p.get("phone_number",""), min=max_mins, amount=amt), parse_mode="HTML")
+                        try: await app.bot.send_message(tid, t(lang,"auto_cancel", num=p.get("phone_number",""), min=max_mins, amount=amt), parse_mode="HTML")
                         except: pass
         except Exception as e: log.error(f"SMS checker: {e}")
-
 
 async def payment_poller_task(app: Application):
     from payment import payment_poller
     await payment_poller(app)
 
-
 # ── Anti-Spam Middleware Logic ────────────────────────────────────────────────
-# Use a simple in-memory cache for performance
-SPAM_CACHE = {} # {tid: {"last_click": datetime, "series_start": datetime, "spam_count": int, "ban_count": int, "banned_until": datetime}}
+SPAM_CACHE = {}
 
 async def antispam_middleware(update, ctx):
-    if not update.effective_user or update.effective_user.is_bot:
-        return
-
+    if not update or not update.effective_user or update.effective_user.is_bot: return
     tid = update.effective_user.id
-    if tid in SUPER_ADMIN_IDS:
-        return
-
-    from core import _q, DATABASE_PATH, t
+    if tid in SUPER_ADMIN_IDS: return
+    from core import DATABASE_PATH, t
     import aiosqlite
-
     now = datetime.now()
-
-    # Check cache first
     state = SPAM_CACHE.get(tid)
-
     if not state:
-        # Load from DB
         async with aiosqlite.connect(DATABASE_PATH) as db:
             db.row_factory = aiosqlite.Row
             cur = await db.execute("SELECT * FROM user_antispam WHERE telegram_id=?", (tid,))
@@ -89,59 +71,37 @@ async def antispam_middleware(update, ctx):
             if row:
                 state = {
                     "last_click": datetime.fromisoformat(row["last_click_at"]),
-                    "series_start": datetime.fromisoformat(row["series_start_at"]) if row.get("series_start_at") else now,
-                    "spam_count": row["spam_count"],
-                    "ban_count": row["ban_count"],
+                    "series_start": datetime.fromisoformat(row["series_start_at"]) if row["series_start_at"] else now,
+                    "spam_count": row["spam_count"], "ban_count": row["ban_count"],
                     "banned_until": datetime.fromisoformat(row["banned_until"]) if row["banned_until"] else None
                 }
             else:
-                state = {
-                    "last_click": now,
-                    "series_start": now,
-                    "spam_count": 0,
-                    "ban_count": 0,
-                    "banned_until": None
-                }
-                await db.execute("INSERT INTO user_antispam (telegram_id, last_click_at, series_start_at) VALUES (?,?,?)",
-                                 (tid, now.isoformat(), now.isoformat()))
+                state = {"last_click": now, "series_start": now, "spam_count": 0, "ban_count": 0, "banned_until": None}
+                await db.execute("INSERT INTO user_antispam (telegram_id, last_click_at, series_start_at) VALUES (?,?,?)", (tid, now.isoformat(), now.isoformat()))
                 await db.commit()
         SPAM_CACHE[tid] = state
 
-    # Check ban
     if state["banned_until"]:
-        if now < state["banned_until"]:
-            raise ApplicationHandlerStop()
+        if now < state["banned_until"]: raise ApplicationHandlerStop()
         else:
-            # Ban expired
             state["banned_until"] = None
             async with aiosqlite.connect(DATABASE_PATH) as db:
                 await db.execute("UPDATE user_antispam SET banned_until=NULL WHERE telegram_id=?", (tid,))
                 await db.commit()
 
-    # Logic:
-    # Reset series if > 10s gap
     if (now - state["last_click"]).total_seconds() > 10.0:
         state["spam_count"] = 0
         state["series_start"] = now
-
     state["last_click"] = now
     state["spam_count"] += 1
     duration = (now - state["series_start"]).total_seconds()
-
     is_banned = False
     is_warned = False
-
     if state["ban_count"] == 0:
-        # Click 9 in 2s -> Warn
-        if state["spam_count"] == 9 and duration <= 2.0:
-            is_warned = True
-        # Click 17 in 7s -> Ban
-        if state["spam_count"] >= 17 and duration <= 7.0:
-            is_banned = True
+        if state["spam_count"] == 9 and duration <= 2.0: is_warned = True
+        if state["spam_count"] >= 17 and duration <= 7.0: is_banned = True
     else:
-        # Click 9 in 2s -> Ban
-        if state["spam_count"] >= 9 and duration <= 2.0:
-            is_banned = True
+        if state["spam_count"] >= 9 and duration <= 2.0: is_banned = True
 
     if is_banned:
         state["ban_count"] += 1
@@ -149,88 +109,53 @@ async def antispam_middleware(update, ctx):
         mins = durations[min(state["ban_count"]-1, 2)]
         state["banned_until"] = now + timedelta(minutes=mins)
         state["spam_count"] = 0
-
         async with aiosqlite.connect(DATABASE_PATH) as db:
             await db.execute("UPDATE user_antispam SET banned_until=?, ban_count=?, spam_count=0, last_click_at=?, series_start_at=? WHERE telegram_id=?",
                              (state["banned_until"].isoformat(), state["ban_count"], now.isoformat(), now.isoformat(), tid))
             await db.commit()
-
-        # Notify user
         u = await get_user(tid)
         lang = u.get("language", "ar") if u else "ar"
-        try:
-            await ctx.bot.send_message(tid, t(lang, "antispam_ban", mins=mins))
+        try: await ctx.bot.send_message(tid, t(lang, "antispam_ban", mins=mins))
         except: pass
-
-        # Notify admins
         for aid in SUPER_ADMIN_IDS:
-            try:
-                await ctx.bot.send_message(aid, f"🚫 AntiSpam: User {tid} ({update.effective_user.first_name}) banned for {mins}m")
+            try: await ctx.bot.send_message(aid, f"🚫 AntiSpam: User {tid} banned for {mins}m")
             except: pass
-
         raise ApplicationHandlerStop()
 
     if is_warned:
         u = await get_user(tid)
         lang = u.get("language", "ar") if u else "ar"
-        try:
-            await ctx.bot.send_message(tid, t(lang, "antispam_warn"))
+        try: await ctx.bot.send_message(tid, t(lang, "antispam_warn"))
         except: pass
 
-    # Update DB
     async with aiosqlite.connect(DATABASE_PATH) as db:
         await db.execute("UPDATE user_antispam SET spam_count=?, last_click_at=?, series_start_at=? WHERE telegram_id=?",
                          (state["spam_count"], state["last_click"].isoformat(), state["series_start"].isoformat(), tid))
         await db.commit()
 
-
 async def post_init(app: Application):
     log.info("Initialising database...")
     await init_db()
-    log.info("Database ready")
-
-    # Load OxaPay key
     key = await get_setting("oxapay_key")
     if key:
-        from oxapay import init_oxapay; init_oxapay(key)
-        log.info("OxaPay key loaded")
-
-    # Load active SMSPool key (may be stored in DB)
+        from oxapay import init_oxapay
+        init_oxapay(key)
     active_sk = await get_active_smspool_key()
-    if active_sk:
-        pool.key = active_sk
-        log.info("SMSPool key loaded from DB")
-
+    if active_sk: pool.key = active_sk
     asyncio.create_task(sms_checker(app))
     asyncio.create_task(payment_poller_task(app))
     log.info("Background tasks started")
 
-
 def build_app() -> Application:
     if not BOT_TOKEN: raise RuntimeError("BOT_TOKEN not set!")
     app = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
-
-    # Register Anti-Spam Middleware
     app.add_handler(TypeHandler(object, antispam_middleware), group=-1)
-
-    # Priority order matters for ConversationHandlers
     admin.register(app)
     admin_payment.register(app)
-    admin_tools.register(app)  # broadcast + smspool keys + msg commands
+    admin_tools.register(app)
     payment.register(app)
     handlers.register(app)
-
-    log.info("All handlers registered")
     return app
 
-
-def main():
-    log.info("SMS Bot Starting...")
-    build_app().run_polling(
-        allowed_updates=["message","callback_query","inline_query"],
-        drop_pending_updates=True
-    )
-
-
 if __name__ == "__main__":
-    main()
+    build_app().run_polling(allowed_updates=["message","callback_query","inline_query"], drop_pending_updates=True)
