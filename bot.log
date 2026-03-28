@@ -1,0 +1,54 @@
+2026-03-28 01:49:55,930 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
+2026-03-28 01:49:55,930 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
+2026-03-28 01:49:55,932 | INFO     | __main__ | Initialising database...
+2026-03-28 01:49:55,932 | INFO     | __main__ | Initialising database...
+2026-03-28 01:49:55,939 | INFO     | __main__ | Background tasks started
+2026-03-28 01:49:55,939 | INFO     | __main__ | Background tasks started
+2026-03-28 01:49:55,940 | INFO     | __main__ | SMS checker started
+2026-03-28 01:49:55,940 | INFO     | __main__ | SMS checker started
+2026-03-28 01:49:55,940 | INFO     | payment_poller | Payment poller started ✓
+2026-03-28 01:49:55,940 | INFO     | payment_poller | Payment poller started ✓
+2026-03-28 01:49:56,060 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
+2026-03-28 01:49:56,060 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
+2026-03-28 01:49:56,062 | INFO     | telegram.ext.Application | Application started
+2026-03-28 01:49:56,062 | INFO     | telegram.ext.Application | Application started
+2026-03-28 01:50:06,416 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:06,416 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:16,535 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:16,535 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:26,655 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:26,655 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:36,774 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:36,774 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:46,894 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:46,894 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:57,016 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:50:57,016 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:07,136 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:07,136 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:17,257 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:17,257 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:27,375 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:27,375 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:37,496 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:37,496 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:47,615 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:47,615 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:57,736 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:51:57,736 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:07,855 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:07,855 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:17,977 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:17,977 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:28,119 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:28,119 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:38,238 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:38,238 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:48,356 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:48,356 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:58,476 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:52:58,476 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:53:08,595 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:53:08,595 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:53:18,715 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
+2026-03-28 01:53:18,715 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"

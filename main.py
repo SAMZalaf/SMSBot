@@ -13,7 +13,14 @@ from core import (
 from smspool import pool, SMSError
 import handlers, admin, admin_payment, payment, admin_tools
 
-logging.basicConfig(format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s", level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler("bot.log"),
+        logging.StreamHandler()
+    ]
+)
 log = logging.getLogger(__name__)
 
 async def sms_checker(app: Application):

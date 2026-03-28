@@ -274,7 +274,9 @@ async def get_top_users(limit=10):
         ORDER BY total_spent DESC LIMIT ?""", (limit,), fetchall=True)
 
 # ── balance ───────────────────────────────────────────────────────────────────
-async def update_balance(tid, amount, tx_type, desc, ref_id=None, method=None, actor=None):
+async def update_balance(tid, amount, tx_type, desc, ref_id=None, method=None, actor=None, admin_actor=None):
+    # Support both 'actor' and 'admin_actor' for backward compatibility
+    final_actor = actor or admin_actor
     async with aiosqlite.connect(DATABASE_PATH) as db:
         db.row_factory = aiosqlite.Row
         cur = await db.execute("SELECT id,balance FROM users WHERE telegram_id=?", (tid,))
@@ -287,7 +289,7 @@ async def update_balance(tid, amount, tx_type, desc, ref_id=None, method=None, a
         await db.execute("UPDATE users SET balance=?,last_active=CURRENT_TIMESTAMP WHERE telegram_id=?", (new_bal, tid))
         await db.execute("""INSERT INTO transactions(user_id,type,amount,balance_before,balance_after,
             description,reference_id,payment_method,admin_actor) VALUES(?,?,?,?,?,?,?,?,?)""",
-            (uid, tx_type, amount, bal, new_bal, desc, ref_id, method, actor))
+            (uid, tx_type, amount, bal, new_bal, desc, ref_id, method, final_actor))
         if tx_type == "purchase" and amount < 0:
             await db.execute("UPDATE users SET total_spent=total_spent+?,total_purchases=total_purchases+1 WHERE telegram_id=?",
                              (abs(amount), tid))
