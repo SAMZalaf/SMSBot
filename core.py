@@ -1056,6 +1056,7 @@ STRINGS = {
   "adm_user_refs_empty": "📭 لا إحالات لهذا المستخدم.",
   "adm_user_ref_row": "👤 {name} | 🛒 {purchases} | 💰 ${earned:.4f} | {date}",
 
+  "buy_select_category": "📂 <b>اختر نوع الأرقام</b>",
   "buy_select_country": "🌍 <b>اختر الدولة</b>",
   "buy_select_service": "📱 <b>اختر الخدمة</b> — {country}",
   "buy_confirm": (
@@ -1692,6 +1693,7 @@ STRINGS = {
   "adm_user_refs_empty": "📭 No referrals for this user.",
   "adm_user_ref_row": "👤 {name} | 🛒 {purchases} | 💰 ${earned:.4f} | {date}",
 
+  "buy_select_category": "📂 <b>Select Category</b>",
   "buy_select_country": "🌍 <b>Select Country</b>",
   "buy_select_service": "📱 <b>Select Service</b> — {country}",
   "buy_confirm": (
@@ -2239,16 +2241,26 @@ def _kb(*rows): return KB(list(rows))
 
 def back_kb(lang, cb): return _kb(_row(Btn(t(lang,"back"), callback_data=cb)))
 
+def buy_categories_kb(lang):
+    return _kb(
+        _row(Btn("📱 SMSPool (High Quality)", callback_data="b:s")),
+        _row(Btn(t(lang,"back"), callback_data="mm"))
+    )
+
 def main_menu_kb(lang, is_admin=False):
+    # Layout requested by user
     rows = [
-        _row(Btn(t(lang,"btn_buy"),     callback_data="b:s"),
-             Btn(t(lang,"btn_active"),  callback_data="ac:l")),
-        _row(Btn(t(lang,"btn_history"), callback_data="hi:0"),
-             Btn(t(lang,"btn_balance"), callback_data="bl:m")),
-        _row(Btn(t(lang,"btn_stats"),   callback_data="st:m"),
+        # Row 1: Buy unique & large
+        _row(Btn(t(lang,"btn_buy"),     callback_data="b:cat")),
+        # Row 2: Active, History
+        _row(Btn(t(lang,"btn_active"),  callback_data="ac:l"),
+             Btn(t(lang,"btn_history"), callback_data="hi:0")),
+        # Row 3: Balance, Profile
+        _row(Btn(t(lang,"btn_balance"), callback_data="bl:m"),
              Btn(t(lang,"btn_profile"), callback_data="pr:m")),
-        _row(Btn(t(lang,"btn_referral"), callback_data="ref:m"),
-             Btn(t(lang,"btn_lang"),      callback_data="lc")),
+        # Row 4: Language, Referral
+        _row(Btn(t(lang,"btn_lang"),      callback_data="lc"),
+             Btn(t(lang,"btn_referral"), callback_data="ref:m")),
     ]
     if is_admin:
         rows.append(_row(Btn(t(lang,"btn_admin"), callback_data="adm:m")))
@@ -2268,7 +2280,7 @@ def countries_kb(lang, countries, page=0):
     nav.append(Btn(t(lang,"page",p=page+1,t=total), callback_data="noop"))
     if start+COUNTRIES_PER < len(countries): nav.append(Btn(t(lang,"next"), callback_data=f"b:cp:{page+1}"))
     rows.append(nav)
-    rows.append([Btn(t(lang,"back"), callback_data="mm")])
+    rows.append([Btn(t(lang,"back"), callback_data="b:cat")])
     return KB(rows)
 
 def services_kb(lang, services, cid, page=0):
@@ -2324,10 +2336,10 @@ def balance_kb(lang):
         _row(Btn(t(lang,"back"),            callback_data="mm")))
 
 def profile_kb(lang):
-    return _kb(_row(Btn(t(lang,"btn_pr_info"),    callback_data="pr:i")),
-               _row(Btn(t(lang,"btn_pr_stats"),   callback_data="pr:s")),
-               _row(Btn(t(lang,"btn_pr_history"), callback_data="pr:h:0")),
-               _row(Btn(t(lang,"btn_pr_balance"), callback_data="pr:b")),
+    return _kb(_row(Btn(t(lang,"btn_pr_info"),    callback_data="pr:i"),
+                    Btn(t(lang,"btn_pr_stats"),   callback_data="pr:s")),
+               _row(Btn(t(lang,"btn_pr_history"), callback_data="pr:h:0"),
+                    Btn(t(lang,"btn_pr_balance"), callback_data="pr:b")),
                _row(Btn(t(lang,"btn_pr_lang"),    callback_data="lc")),
                _row(Btn(t(lang,"back"),           callback_data="mm")))
 

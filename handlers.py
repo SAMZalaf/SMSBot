@@ -152,6 +152,13 @@ async def lang_set_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 # BUY FLOW
 # ════════════════════════════════════════════════════════════════════════════
 
+async def buy_cat_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang = await _lang(q.from_user.id)
+    from core import buy_categories_kb
+    await q.edit_message_text(t(lang, "buy_select_category"),
+                               parse_mode="HTML", reply_markup=buy_categories_kb(lang))
+
 async def buy_start_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     q    = update.callback_query
     await q.answer()
@@ -1070,6 +1077,7 @@ def register(app):
     cb(CallbackQueryHandler(lang_choose_cb,             pattern="^lc$"))
     cb(CallbackQueryHandler(lang_set_cb,                pattern=r"^l:(ar|en)$"))
 
+    cb(CallbackQueryHandler(buy_cat_cb,                 pattern="^b:cat$"))
     cb(CallbackQueryHandler(buy_start_cb,               pattern="^b:s$"))
     cb(CallbackQueryHandler(buy_countries_page_cb,      pattern=r"^b:cp:\d+$"))
     cb(CallbackQueryHandler(buy_country_cb,             pattern=r"^b:c:\w+$"))

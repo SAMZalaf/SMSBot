@@ -321,66 +321,60 @@ async def _confirm_payment(track_id, payment, lang, tid, bot):
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# BACKGROUND PAYMENT POLLER (called from main.py)
+# BACKGROUND PAYMENT POLLER STEP (called by JobQueue)
 # ════════════════════════════════════════════════════════════════════════════
 
-async def payment_poller(app):
-    """Background task: polls pending payments every 30 seconds."""
-    import logging
-    log = logging.getLogger("payment_poller")
-    log.info("Payment poller started ✓")
+async def payment_poller_step(bot):
+    """Execution step for polling pending payments."""
+    try:
+        from core import get_pending_payments
+        payments = await get_pending_payments()
+        if not payments:
+            return
 
-    while True:
-        await asyncio.sleep(30)
-        try:
-            from core import get_pending_payments, PAY_CHECK_INTERVAL
-            payments = await get_pending_payments()
-            if not payments:
+        key = await get_setting("oxapay_key") or ""
+        if not key:
+            return
+        init_oxapay(key)
+
+        for p in payments:
+            track_id = p.get("track_id")
+            tid      = p.get("tg_id")
+            lang     = p.get("user_lang","ar")
+            if not track_id:
                 continue
 
-            key = await get_setting("oxapay_key") or ""
-            if not key:
-                continue
-            init_oxapay(key)
-
-            for p in payments:
-                track_id = p.get("track_id")
-                tid      = p.get("tg_id")
-                lang     = p.get("user_lang","ar")
-                if not track_id:
-                    continue
-
-                # Check if expired_at has passed
-                expired_at = p.get("expired_at")
-                if expired_at:
-                    try:
-                        if datetime.now() > datetime.fromisoformat(expired_at):
-                            await update_payment(track_id, status="Expired")
-                            continue
-                    except Exception:
-                        pass
-
+            # Check if expired_at has passed
+            expired_at = p.get("expired_at")
+            if expired_at:
                 try:
-                    res = await oxapay.check_payment(track_id)
-                except OxaPayError:
-                    continue
+                    if datetime.now() > datetime.fromisoformat(expired_at):
+                        await update_payment(track_id, status="Expired")
+                        continue
+                except Exception:
+                    pass
 
-                status = res.get("status", "Waiting")
-                await update_payment(
-                    track_id,
-                    status=status,
-                    received_amount=res.get("receivedAmount"),
-                    raw_response=str(res)
-                )
+            try:
+                res = await oxapay.check_payment(track_id)
+            except OxaPayError:
+                continue
 
-                if status == "Paid":
-                    await _confirm_payment(track_id, p, lang, tid, app.bot)
-                elif status in ("Expired", "Error", "Canceled"):
-                    await update_payment(track_id, status=status)
+            status = res.get("status", "Waiting")
+            await update_payment(
+                track_id,
+                status=status,
+                received_amount=res.get("receivedAmount"),
+                raw_response=str(res)
+            )
 
-        except Exception as e:
-            import logging
-            logging.getLogger("payment_poller").error(f"Poller error: {e}")
+            if status == "Paid":
+                await _confirm_payment(track_id, p, lang, tid, bot)
+            elif status in ("Expired", "Error", "Canceled"):
+                await update_payment(track_id, status=status)
+
+    except Exception as e:
+        import logging
+        logging.getLogger("payment_poller").error(f"Poller error: {e}")
 
 
 # ════════════════════════════════════════════════════════════════════════════
