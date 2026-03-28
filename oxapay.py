@@ -39,7 +39,12 @@ class OxaPay:
 
     async def _request(self, path: str, data: dict) -> dict:
         url = f"{self.base}{path}"
-        payload = {"merchant": self.key, "key": self.key, **data}
+        # Ensure numeric values are properly handled (cast to strings/floats/ints as expected)
+        payload = {"merchant": str(self.key), "key": str(self.key)}
+        for k, v in data.items():
+            if k in ("amount", "underPaidCover"): payload[k] = float(v)
+            elif k in ("lifeTime", "feePaidByPayer"): payload[k] = int(v)
+            else: payload[k] = str(v)
 
         async with aiohttp.ClientSession() as s:
             try:
@@ -52,8 +57,10 @@ class OxaPay:
 
                     resp = json.loads(resp_text)
                     # Result 100/200/None usually means okay depending on endpoint
-                    if resp.get("result") not in (100, 200, None):
-                        raise OxaPayError(resp.get("message", "API Error"))
+                    # 100/200/None usually means okay. Check result value properly.
+                    res_val = resp.get("result")
+                    if res_val not in (100, 200, None):
+                        raise OxaPayError(f"{resp.get('message', 'API Error')} (Result: {res_val})")
                     return resp
             except Exception as e:
                 if isinstance(e, OxaPayError): raise
