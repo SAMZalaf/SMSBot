@@ -140,7 +140,9 @@ async def antispam_middleware(update, ctx):
 async def post_init(app: Application):
     log.info("Initialising database...")
     await init_db()
-    key = await get_setting("oxapay_key")
+    from core import OXAPAY_API_KEY
+    db_key = await get_setting("oxapay_key")
+    key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
     if key:
         from oxapay import init_oxapay
         init_oxapay(key)

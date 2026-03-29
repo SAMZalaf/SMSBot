@@ -50,7 +50,7 @@ class OxaPay:
             try:
                 async with s.post(url, json=payload, headers=self.headers, timeout=20) as r:
                     resp_text = await r.text()
-                    log.info(f"OxaPay Request: {path} | Status: {r.status} | Body: {resp_text[:300]}")
+                    log.info(f"OxaPay Request: {path} | Status: {r.status} | Payload: {json.dumps(payload)} | Body: {resp_text[:300]}")
 
                     if r.status == 403: raise OxaPayError("Cloudflare 403 (Blocked)")
                     if r.status != 200: raise OxaPayError(f"HTTP {r.status}")
@@ -67,16 +67,18 @@ class OxaPay:
                 raise OxaPayError(f"Connection: {str(e)}")
 
     async def merchant_info(self) -> dict:
-        for ep in ["/merchants/balance", "/merchant/balance", "/payout/balance"]:
+        for ep in ["/merchants/balance", "/merchant/balance", "/wlabel/balance", "/payout/balance"]:
             try: return await self._request(ep, {})
             except: continue
         return {"result": 404, "message": "No endpoint found"}
 
     async def accepted_currencies(self) -> list:
-        try:
-            resp = await self._request("/merchants/list/currencies", {})
-            return resp.get("data", resp.get("result_data", []))
-        except: return []
+        for ep in ["/merchants/list/currencies", "/wlabel/list/currencies"]:
+            try:
+                resp = await self._request(ep, {})
+                return resp.get("data", resp.get("result_data", []))
+            except: continue
+        return []
 
     async def create_invoice(self, amount: float, pay_currency: str, order_id: str, description: str = "Deposit", lifetime: int = 30, fee_paid_by_payer: int = 0, underpaid_cover: float = 2.5) -> dict:
         payload = {
