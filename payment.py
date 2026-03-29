@@ -135,13 +135,13 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     order_ref = f"dep_{update.effective_user.id}_{uuid.uuid4().hex[:8]}"
     try:
         res = await oxapay.create_invoice(
-            amount=amount,
+            amount=float(amount),
             pay_currency=pay_currency_combined,
             order_id=order_ref,
             description=f"Deposit {amount} USD",
-            lifetime=life,
-            fee_paid_by_payer=fee,
-            underpaid_cover=under,
+            lifetime=int(life),
+            fee_paid_by_payer=int(fee),
+            underpaid_cover=float(under),
         )
     except OxaPayError as e:
         await loading.edit_text(t(lang, "pay_error", reason=str(e)))
