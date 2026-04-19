@@ -144,8 +144,11 @@ async def post_init(app: Application):
     db_key = await get_setting("oxapay_key")
     key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
     if key:
+        log.info(f"Initialising OxaPay with key: {key[:6]}...{key[-4:]}")
         from oxapay import init_oxapay
         init_oxapay(key)
+    else:
+        log.warning("No OxaPay API key found!")
     active_sk = await get_active_smspool_key()
     if active_sk: pool.key = active_sk
 
