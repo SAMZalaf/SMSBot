@@ -128,7 +128,9 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     loading = await update.message.reply_text(t(lang, "pay_creating"))
 
     # Reload oxapay with current key from settings
-    key = await get_setting("oxapay_key") or ""
+    from core import OXAPAY_API_KEY
+    db_key = await get_setting("oxapay_key")
+    key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
     if key:
         init_oxapay(key)
 

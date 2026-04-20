@@ -506,7 +506,7 @@ async def admin_user_purchases_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE
     for p in ps:
         si = ICONS.get(p.get("status",""),"❓")
         lines.append(f"📞 <code>{p.get('phone_number','—')}</code>  |  📲 {p.get('service_name','—')}  |  🌍 {p.get('country_name','—')}\n"
-                     f"💰 ${p.get('cost_display',0):.4f}  {si} {p.get('status','').title()}  |  📅 {fmt_date(p.get('created_at',''))}\n"
+                     f"💰 ${p.get('cost_display',0):.2f}  {si} {p.get('status','').title()}  |  📅 {fmt_date(p.get('created_at',''))}\n"
                      f"🆔 <code>{p.get('order_id','')}</code>")
         lines.append("")
     nav = []
@@ -532,9 +532,9 @@ async def admin_user_txs_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     lines = [f"💳 <b>{user_display(user)}</b>\n"]
     for tx in txs:
         tp = tx.get("type","")
-        lines.append(f"{tx_icon(tp)} {tx_name('en',tp)}  <b>{tx.get('amount',0):+.4f}$</b>\n"
+        lines.append(f"{tx_icon(tp)} {tx_name('en',tp)}  <b>{tx.get('amount',0):+.2f}$</b>\n"
                      f"📝 {tx.get('description','—')}\n"
-                     f"💳 ${tx.get('balance_after',0):.4f}  |  📅 {fmt_date(tx.get('created_at',''))}")
+                     f"💳 ${tx.get('balance_after',0):.2f}  |  📅 {fmt_date(tx.get('created_at',''))}")
         lines.append("")
     nav = []
     if page > 0: nav.append(Btn(t(lang,"prev"), callback_data=f"adm:ut:{uid}:{page-1}"))
@@ -561,7 +561,7 @@ async def admin_user_stats_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         months_lines.append(f"  📅 {m['mo']}: {m['n']} × ${m['tot']:.2f}")
     text = (
         f"📊 <b>{user_display(user)}</b>\n\n"
-        f"💰 Balance: <b>${user['balance']:.4f}</b>  |  Spent: <b>${user['total_spent']:.4f}</b>\n"
+        f"💰 Balance: <b>${user['balance']:.2f}</b>  |  Spent: <b>${user['total_spent']:.2f}</b>\n"
         f"🛒 Total: <b>{user['total_purchases']}</b>  |  ✅ Done: <b>{by_s.get('completed',{}).get('count',0)}</b>\n"
         f"❌ Cancelled: <b>{by_s.get('cancelled',{}).get('count',0)}</b>  |  💸 Refunds: <b>{user['total_refunds']}</b>\n\n"
         f"📱 Top Services:\n{svcs}\n\n🌍 Top Countries:\n{cnts}\n\n"
@@ -587,7 +587,7 @@ async def admin_all_txs_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     for tx in txs:
         tp    = tx.get("type","")
         uname = tx.get("username") or tx.get("first_name") or str(tx.get("telegram_id","?"))
-        lines.append(f"{tx_icon(tp)} <b>{uname}</b>  {tx_name('en',tp)}  <b>{tx.get('amount',0):+.4f}$</b>\n"
+        lines.append(f"{tx_icon(tp)} <b>{uname}</b>  {tx_name('en',tp)}  <b>{tx.get('amount',0):+.2f}$</b>\n"
                      f"📝 {tx.get('description','—')}  |  📅 {fmt_date(tx.get('created_at',''))}")
         lines.append("")
     nav = []
@@ -614,7 +614,7 @@ async def admin_all_purchases_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE)
         un  = p.get("username") or p.get("first_name") or str(p.get("telegram_id","?"))
         lines.append(f"👤 <b>{un}</b>  📞 <code>{p.get('phone_number','—')}</code>\n"
                      f"📲 {p.get('service_name','—')}  🌍 {p.get('country_name','—')}\n"
-                     f"💰 ${p.get('cost_display',0):.4f}  {si}  📅 {fmt_date(p.get('created_at',''))}")
+                     f"💰 ${p.get('cost_display',0):.2f}  {si}  📅 {fmt_date(p.get('created_at',''))}")
         lines.append("")
     nav = []
     if page > 0: nav.append(Btn(t(lang,"prev"), callback_data=f"adm:ap:{page-1}"))
@@ -758,7 +758,7 @@ async def recv_setting_val(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     # Show confirmation with extra info for markup
     if key == "price_markup":
         pct   = float(val)
-        extra = f"\n\n📈 {'مثال' if lang=='ar' else 'Example'}: $1.00 → ${1*(1+pct/100):.4f}"
+        extra = f"\n\n📈 {'مثال' if lang=='ar' else 'Example'}: $1.00 → ${1*(1+pct/100):.2f}"
         await update.message.reply_text(
             t(lang,"adm_setting_saved") + extra,
             parse_mode="HTML",
@@ -1211,7 +1211,7 @@ async def admin_user_referrals_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE
     stats = await get_user_referral_stats(user["telegram_id"])
     lines.append("─" * 18)
     lines.append(f"📊 {'الإجمالي' if lang=='ar' else 'Total'}: {stats.get('total',0)} | "
-                 f"💰 ${stats.get('total_earned',0):.4f} | "
+                 f"💰 ${stats.get('total_earned',0):.2f} | "
                  f"{'النسبة' if lang=='ar' else 'Rate'}: {stats.get('pct',5)}%")
 
     nav = []

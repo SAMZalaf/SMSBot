@@ -414,7 +414,9 @@ async def adm_pm_add_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     if not ok: return
 
     # Fetch available currencies from OxaPay
-    key = await get_setting("oxapay_key") or ""
+    from core import OXAPAY_API_KEY
+    db_key = await get_setting("oxapay_key")
+    key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
     if key: init_oxapay(key)
 
     await q.edit_message_text(t(lang,"loading"), parse_mode="HTML")

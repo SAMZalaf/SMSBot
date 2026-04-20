@@ -496,7 +496,7 @@ async def process_referral_commission(purchase_id: int, referred_tid: int,
         return None
 
     # Credit referrer
-    desc_ar = f"عمولة إحالة: {referred.get('first_name','') or referred.get('username','')} ({pct}% من ${purchase_amount:.4f})"
+    desc_ar = f"عمولة إحالة: {referred.get('first_name','') or referred.get('username','')} ({pct}% من ${purchase_amount:.2f})"
     new_bal = await update_balance(
         referrer["telegram_id"], commission, "referral",
         desc_ar, ref_id=str(purchase_id), method="referral"
@@ -940,7 +940,7 @@ STRINGS = {
   "yes":         "✅ نعم",
   "no":          "❌ لا",
 
-  "welcome": "👋 أهلاً <b>{name}</b>!\n\n🤖 <b>بوت SMS</b> — شراء أرقام للتحقق\n\n💰 رصيدك: <b>${bal:.4f}</b>",
+  "welcome": "👋 أهلاً <b>{name}</b>!\n\n🤖 <b>بوت SMS</b> — شراء أرقام للتحقق\n\n💰 رصيدك: <b>${bal:.2f}</b>",
   "main_menu": "🏠 <b>القائمة الرئيسية</b>",
 
   "btn_buy":      "🛒 شراء رقم",
@@ -964,26 +964,26 @@ STRINGS = {
     "<code>{link}</code>\n\n"
     "📊 إجمالي من دعوتهم: <b>{total}</b>\n"
     "✅ منهم اشتروا: <b>{active}</b>\n"
-    "💸 إجمالي ما كسبته: <b>${earned:.4f}</b>\n"
-    "📅 هذا الشهر: <b>${month:.4f}</b>"
+    "💸 إجمالي ما كسبته: <b>${earned:.2f}</b>\n"
+    "📅 هذا الشهر: <b>${month:.2f}</b>"
   ),
   "ref_list_title": "👥 <b>قائمة إحالاتي</b>",
   "ref_list_empty": "📭 لم تقم بأي إحالة حتى الآن.\n\nشارك رابطك لتبدأ الكسب!",
   "ref_row": (
     "👤 <b>{name}</b>\n"
     "🛒 مشتريات: <b>{purchases}</b> | 💸 أنفق: <b>${spent:.2f}</b>\n"
-    "💰 كسبت منه: <b>${earned:.4f}</b> | 📅 {date}"
+    "💰 كسبت منه: <b>${earned:.2f}</b> | 📅 {date}"
   ),
   "ref_earnings_title": "💰 <b>سجل عمولاتي</b>",
   "ref_earnings_empty": "📭 لا توجد عمولات بعد.",
-  "ref_earning_row": "💰 +<b>${amount:.4f}</b> من {name} ({pct}%) | 📅 {date}",
+  "ref_earning_row": "💰 +<b>${amount:.2f}</b> من {name} ({pct}%) | 📅 {date}",
   "ref_stats_title": "📊 <b>إحصائيات إحالاتك</b>",
   "btn_ref_list":     "👥 من دعوتهم",
   "btn_ref_earnings": "💰 عمولاتي",
   "btn_ref_stats":    "📊 إحصائيات",
   "btn_ref_share":    "🔗 مشاركة الرابط",
   "ref_new_user_notify": "🎉 انضم {name} عبر رابط إحالتك!",
-  "ref_commission_notify": "💰 كسبت <b>${amount:.4f}</b> عمولة إحالة من شراء {name}!\nرصيدك: <b>${balance:.4f}</b>",
+  "ref_commission_notify": "💰 كسبت <b>${amount:.2f}</b> عمولة إحالة من شراء {name}!\nرصيدك: <b>${balance:.2f}</b>",
   "ref_welcomed": "👋 لقد انضممت عبر دعوة <b>{name}</b>!\nستحصل على أفضل الخدمات 🎁",
 
   "adm_ref_title":   "🎁 <b>إدارة نظام الإحالة</b>",
@@ -992,14 +992,14 @@ STRINGS = {
     "─────────────────\n"
     "👥 إجمالي الإحالات: <b>{total}</b>\n"
     "✅ إحالات نشطة (اشتروا): <b>{active}</b>\n\n"
-    "💰 إجمالي العمولات المدفوعة: <b>${total_earned:.4f}</b>\n"
-    "📅 اليوم: <b>${today:.4f}</b>\n"
-    "📆 الأسبوع: <b>${week:.4f}</b>\n\n"
+    "💰 إجمالي العمولات المدفوعة: <b>${total_earned:.2f}</b>\n"
+    "📅 اليوم: <b>${today:.2f}</b>\n"
+    "📆 الأسبوع: <b>${week:.2f}</b>\n\n"
     "📈 النسبة الحالية: <b>{pct}%</b>\n"
     "✅ الحالة: {status}\n\n"
     "🏆 أفضل المُحيلين:\n{top}"
   ),
-  "adm_ref_top_row":   "{rank}. <b>{name}</b> — {refs} إحالة — <b>${earned:.4f}</b>",
+  "adm_ref_top_row":   "{rank}. <b>{name}</b> — {refs} إحالة — <b>${earned:.2f}</b>",
   "btn_adm_ref":       "🎁 نظام الإحالة",
   "btn_adm_ref_stats": "📊 إحصائيات الإحالة",
   "btn_adm_ref_list":  "📋 جميع الإحالات",
@@ -1012,7 +1012,7 @@ STRINGS = {
   "adm_ref_all_title": "📋 <b>جميع الإحالات</b>",
   "adm_ref_all_row": (
     "👤 <b>{referrer}</b> → <b>{referred}</b>\n"
-    "💰 +${earned:.4f} ({pct}%) | 📅 {date}"
+    "💰 +${earned:.2f} ({pct}%) | 📅 {date}"
   ),
   "adm_view_referrals": "👥 إحالاتي",
   "adm_usearch_prompt": "🔍 أدخل ID التيليغرام أو @username أو الاسم:",
@@ -1028,12 +1028,12 @@ STRINGS = {
     "🆔 ID: <code>{tid}</code>\n"
     "👤 الاسم: <b>{name}</b>  {uname}\n"
     "─────────────────\n"
-    "💰 الرصيد: <b>${bal:.4f}</b>\n"
-    "💸 إجمالي الإنفاق: <b>${spent:.4f}</b>\n"
+    "💰 الرصيد: <b>${bal:.2f}</b>\n"
+    "💸 إجمالي الإنفاق: <b>${spent:.2f}</b>\n"
     "🛒 المشتريات: <b>{purchases}</b>  |  ✅ مكتملة: <b>{done}</b>\n"
     "💸 استردادات: <b>{refunds}</b>\n"
     "─────────────────\n"
-    "🎁 إحالاته: <b>{refs}</b>  |  💰 عمولاته: <b>${ref_earned:.4f}</b>\n"
+    "🎁 إحالاته: <b>{refs}</b>  |  💰 عمولاته: <b>${ref_earned:.2f}</b>\n"
     "─────────────────\n"
     "📅 انضم: <b>{joined}</b>\n"
     "🕐 آخر نشاط: <b>{active}</b>\n"
@@ -1054,7 +1054,7 @@ STRINGS = {
   "btn_adm_top_refs":    "🎁 الأكثر إحالات",
   "adm_user_refs_title": "👥 <b>إحالات {name}</b>",
   "adm_user_refs_empty": "📭 لا إحالات لهذا المستخدم.",
-  "adm_user_ref_row": "👤 {name} | 🛒 {purchases} | 💰 ${earned:.4f} | {date}",
+  "adm_user_ref_row": "👤 {name} | 🛒 {purchases} | 💰 ${earned:.2f} | {date}",
 
   "buy_select_category": "📂 <b>اختر نوع الأرقام</b>",
   "buy_select_country": "🌍 <b>اختر الدولة</b>",
@@ -1063,15 +1063,15 @@ STRINGS = {
     "✅ <b>تأكيد الشراء</b>\n\n"
     "🌍 الدولة: <b>{country}</b>\n"
     "📱 الخدمة: <b>{service}</b>\n"
-    "💰 السعر: <b>${price:.4f}</b>\n"
-    "💳 رصيدك: <b>${bal:.4f}</b>"
+    "💰 السعر: <b>${price:.2f}</b>\n"
+    "💳 رصيدك: <b>${bal:.2f}</b>"
   ),
-  "buy_insufficient": "❌ رصيد غير كافٍ\nرصيدك: <b>${bal:.4f}</b> | المطلوب: <b>${need:.4f}</b>",
+  "buy_insufficient": "❌ رصيد غير كافٍ\nرصيدك: <b>${bal:.2f}</b> | المطلوب: <b>${need:.2f}</b>",
   "buy_success": (
     "✅ <b>تم الشراء بنجاح!</b>\n\n"
     "📞 الرقم: <code>{num}</code>\n"
     "🌍 {country} | 📱 {service}\n"
-    "💰 التكلفة: <b>${cost:.4f}</b>\n"
+    "💰 التكلفة: <b>${cost:.2f}</b>\n"
     "🆔 الطلب: <code>{oid}</code>\n\n"
     "⏳ جارٍ انتظار رمز التحقق... سيتم إشعارك تلقائياً"
   ),
@@ -1086,7 +1086,7 @@ STRINGS = {
     "─────────────────\n"
     "📱 <code>{num}</code>\n"
     "🌍 {country} | 📲 {service}\n"
-    "💰 ${cost:.4f} | {status}\n"
+    "💰 ${cost:.2f} | {status}\n"
     "📅 {date}\n"
     "🆔 <code>{oid}</code>"
   ),
@@ -1109,16 +1109,16 @@ STRINGS = {
   "btn_reuse_num":   "♻️ استخدام الرقم مجدداً",
   "reuse_title": "♻️ <b>استخدام الرقم مجدداً</b>",
   "reuse_desc": "طلب رمز تحقق جديد على نفس الرقم دون الحاجة لشراء رقم جديد.",
-  "reuse_confirm": "⚠️ هل تريد طلب رمز تحقق جديد على الرقم\n<code>{num}</code>؟\n\n💰 الرصيد المطلوب: <b>${cost:.4f}</b>",
+  "reuse_confirm": "⚠️ هل تريد طلب رمز تحقق جديد على الرقم\n<code>{num}</code>؟\n\n💰 الرصيد المطلوب: <b>${cost:.2f}</b>",
   "reuse_success": "✅ تم إعادة تفعيل الرقم <code>{num}</code>\n⏳ انتظر وصول الرمز الجديد...",
   "reuse_failed":  "❌ فشلت إعادة التفعيل: {reason}",
-  "reuse_no_balance": "❌ رصيد غير كافٍ للإعادة (${need:.4f})",
+  "reuse_no_balance": "❌ رصيد غير كافٍ للإعادة (${need:.2f})",
   "cancel_ask":  "⚠️ تأكيد إلغاء الرقم <code>{num}</code>؟",
   "cancel_ok":   "✅ تم الإلغاء وسيُعاد الرصيد قريباً.",
   "cancel_fail": "❌ فشل الإلغاء: {reason}",
   "resend_ok":   "✅ تم طلب الإرسال مجدداً.",
   "resend_fail": "❌ فشل الإرسال: {reason}",
-  "auto_cancel": "🕐 تم إلغاء الرقم <code>{num}</code> تلقائياً بعد {min} دقيقة واسترداد ${amount:.4f}",
+  "auto_cancel": "🕐 تم إلغاء الرقم <code>{num}</code> تلقائياً بعد {min} دقيقة واسترداد ${amount:.2f}",
 
   "status_active":    "🟢 نشط",
   "status_completed": "✅ مكتمل",
@@ -1134,14 +1134,14 @@ STRINGS = {
     "🛒 الكل: <b>{total}</b>  ✅ مكتملة: <b>{done}</b>  ❌ ملغاة: <b>{cancel}</b>\n"
     "🔍 الفلتر: <b>{filter_name}</b>  |  الصفحة {page}/{pages}"
   ),
-  "history_row_btn": "{icon} {svc} — 🌍{cnt} — ${cost:.4f} — {date}",
+  "history_row_btn": "{icon} {svc} — 🌍{cnt} — ${cost:.2f} — {date}",
   "history_detail": (
     "📋 <b>تفاصيل الشراء</b>\n"
     "─────────────────\n"
     "📞 الرقم: <code>{num}</code>\n"
     "🌍 الدولة: <b>{country}</b>\n"
     "📱 الخدمة: <b>{service}</b>\n"
-    "💰 التكلفة: <b>${cost:.4f}</b>\n"
+    "💰 التكلفة: <b>${cost:.2f}</b>\n"
     "📅 تاريخ الشراء: <b>{date}</b>\n"
     "🔄 الحالة: {status}\n"
     "🆔 رقم الطلب: <code>{oid}</code>"
@@ -1160,19 +1160,19 @@ STRINGS = {
   "history_cleanup_ask":  "⚠️ ستُحذف جميع المشتريات الملغاة والمستردة الأقدم من {days} يوم.\nعدد السجلات: <b>{count}</b>\nهل تريد المتابعة؟",
   "history_cleanup_done": "✅ تم حذف <b>{count}</b> سجل قديم.",
   "history_cleanup_empty": "📭 لا توجد سجلات قديمة للحذف.",
-  "history_row": "📞 <code>{num}</code> | {svc} | 🌍 {cnt}\n💰 ${cost:.4f} | {status} | {date}",
+  "history_row": "📞 <code>{num}</code> | {svc} | 🌍 {cnt}\n💰 ${cost:.2f} | {status} | {date}",
 
   "balance_title": (
     "💰 <b>رصيدك</b>\n"
     "─────────────────\n"
-    "💵 الرصيد: <b>${bal:.4f}</b>\n"
-    "💸 إجمالي الإنفاق: <b>${spent:.4f}</b>\n"
+    "💵 الرصيد: <b>${bal:.2f}</b>\n"
+    "💸 إجمالي الإنفاق: <b>${spent:.2f}</b>\n"
     "🛒 المشتريات: <b>{purchases}</b>"
   ),
   "btn_deposit":  "➕ إيداع رصيد",
   "btn_txs":      "📋 سجل المعاملات",
   "tx_title":     "📋 <b>سجل المعاملات</b>",
-  "tx_row":       "{icon} <b>{name}</b>  {amount:+.4f}$\n📝 {desc} | 💳 ${after:.4f} | {date}",
+  "tx_row":       "{icon} <b>{name}</b>  {amount:+.2f}$\n📝 {desc} | 💳 ${after:.2f} | {date}",
   "tx_empty":     "📭 لا توجد معاملات.",
   "deposit_info": "💳 <b>الإيداع</b>\n\nاختر طريقة الدفع:",
   "btn_deposit_pay":    "💳 إيداع رصيد",
@@ -1208,7 +1208,7 @@ STRINGS = {
     "🎉 <b>تم استلام دفعتك!</b>\n\n"
     "💵 <b>${usd:.2f}</b> أُضيفت لرصيدك\n"
     "🪙 {coin} — رقم التتبع: <code>{track_id}</code>\n"
-    "💰 رصيدك الجديد: <b>${balance:.4f}</b>"
+    "💰 رصيدك الجديد: <b>${balance:.2f}</b>"
   ),
   "pay_history_title":  "📋 <b>سجل إيداعاتك</b>",
   "pay_history_empty":  "📭 لا توجد إيداعات سابقة.",
@@ -1222,8 +1222,8 @@ STRINGS = {
 
   "stats_title": "📊 <b>إحصائياتك</b>",
   "stats_body": (
-    "💰 الرصيد: <b>${bal:.4f}</b>\n"
-    "💸 إجمالي الإنفاق: <b>${spent:.4f}</b>\n"
+    "💰 الرصيد: <b>${bal:.2f}</b>\n"
+    "💸 إجمالي الإنفاق: <b>${spent:.2f}</b>\n"
     "🛒 إجمالي المشتريات: <b>{total}</b>\n"
     "✅ مكتملة: <b>{done}</b> | ❌ ملغاة: <b>{cancel}</b> | 💸 مستردة: <b>{refund}</b>\n\n"
     "📱 الخدمات الأكثر استخداماً:\n{svcs}\n\n"
@@ -1235,8 +1235,8 @@ STRINGS = {
   "profile_info": (
     "🆔 <code>{tid}</code>\n"
     "👤 <b>{name}</b>  {uname}\n"
-    "💰 الرصيد: <b>${bal:.4f}</b>\n"
-    "💸 إجمالي الإنفاق: <b>${spent:.4f}</b>\n"
+    "💰 الرصيد: <b>${bal:.2f}</b>\n"
+    "💸 إجمالي الإنفاق: <b>${spent:.2f}</b>\n"
     "🛒 المشتريات: <b>{purchases}</b>\n"
     "📅 انضم: {joined}\n"
     "🕐 آخر نشاط: {active}\n"
@@ -1273,7 +1273,7 @@ STRINGS = {
     "─────────────────\n"
     "المفتاح النشط الآن: <code>{active_preview}</code>\n"
     "عدد المفاتيح المحفوظة: <b>{count}</b>\n"
-    "رصيد الحساب: <b>${balance:.4f}</b>"
+    "رصيد الحساب: <b>${balance:.2f}</b>"
   ),
   "adm_smspool_key_row":  "{status} <code>{preview}</code>  |  📝 {label}",
   "adm_smspool_enter_key": "🔑 أدخل مفتاح SMSPool API الجديد:",
@@ -1281,7 +1281,7 @@ STRINGS = {
   "adm_smspool_added":    "✅ تمت إضافة المفتاح.",
   "adm_smspool_deleted":  "✅ تم حذف المفتاح.",
   "adm_smspool_activated":"✅ تم تفعيل المفتاح كمفتاح نشط.",
-  "adm_smspool_balance":  "💰 رصيد الحساب: <b>${balance:.4f}</b>",
+  "adm_smspool_balance":  "💰 رصيد الحساب: <b>${balance:.2f}</b>",
   "adm_smspool_no_keys":  "📭 لا توجد مفاتيح محفوظة. أضف مفتاحاً.",
   "adm_smspool_invalid":  "❌ المفتاح غير صالح أو لم يتم التحقق منه.",
   "btn_adm_smspool_add":  "➕ إضافة مفتاح",
@@ -1298,65 +1298,65 @@ STRINGS = {
     "✅ مكتملة: <b>{completed}</b>  |  💸 مستردة: <b>{refunded}</b>\n"
     "─────────────────\n"
     "💵 <b>الإيرادات (ما دفعه العملاء)</b>\n"
-    "الإجمالي: <b>${revenue_total:.4f}</b>\n"
-    "اليوم: <b>${revenue_today:.4f}</b>  |  الأسبوع: <b>${revenue_week:.4f}</b>  |  الشهر: <b>${revenue_month:.4f}</b>\n"
+    "الإجمالي: <b>${revenue_total:.2f}</b>\n"
+    "اليوم: <b>${revenue_today:.2f}</b>  |  الأسبوع: <b>${revenue_week:.2f}</b>  |  الشهر: <b>${revenue_month:.2f}</b>\n"
     "─────────────────\n"
     "🏭 <b>التكاليف (رأس المال — ما دفعناه لـ SMSPool)</b>\n"
-    "الإجمالي: <b>${cost_total:.4f}</b>\n"
-    "اليوم: <b>${cost_today:.4f}</b>  |  الأسبوع: <b>${cost_week:.4f}</b>  |  الشهر: <b>${cost_month:.4f}</b>\n"
+    "الإجمالي: <b>${cost_total:.2f}</b>\n"
+    "اليوم: <b>${cost_today:.2f}</b>  |  الأسبوع: <b>${cost_week:.2f}</b>  |  الشهر: <b>${cost_month:.2f}</b>\n"
     "─────────────────\n"
     "📤 <b>العمولات المدفوعة (إحالة)</b>\n"
-    "الإجمالي: <b>${commission_total:.4f}</b>  |  الشهر: <b>${commission_month:.4f}</b>\n"
+    "الإجمالي: <b>${commission_total:.2f}</b>  |  الشهر: <b>${commission_month:.2f}</b>\n"
     "─────────────────\n"
     "✨ <b>الربح الإجمالي (قبل العمولات)</b>\n"
-    "الإجمالي: <b>${gross_total:.4f}</b>  |  اليوم: <b>${gross_today:.4f}</b>\n"
-    "الأسبوع: <b>${gross_week:.4f}</b>  |  الشهر: <b>${gross_month:.4f}</b>\n"
+    "الإجمالي: <b>${gross_total:.2f}</b>  |  اليوم: <b>${gross_today:.2f}</b>\n"
+    "الأسبوع: <b>${gross_week:.2f}</b>  |  الشهر: <b>${gross_month:.2f}</b>\n"
     "هامش: <b>{margin:.2f}%</b>\n"
     "─────────────────\n"
     "💎 <b>صافي الربح (بعد العمولات)</b>\n"
-    "الإجمالي: <b>${net_total:.4f}</b>  |  اليوم: <b>${net_today:.4f}</b>\n"
-    "الأسبوع: <b>${net_week:.4f}</b>  |  الشهر: <b>${net_month:.4f}</b>\n"
+    "الإجمالي: <b>${net_total:.2f}</b>  |  اليوم: <b>${net_today:.2f}</b>\n"
+    "الأسبوع: <b>${net_week:.2f}</b>  |  الشهر: <b>${net_month:.2f}</b>\n"
     "صافي الهامش: <b>{net_margin:.2f}%</b>"
   ),
   "adm_profit_deposits": (
     "💳 <b>الإيداعات</b>\n"
     "─────────────────\n"
-    "الإجمالي المُودَع: <b>${deposits_total:.4f}</b>\n"
-    "اليوم: <b>${deposits_today:.4f}</b>  |  الأسبوع: <b>${deposits_week:.4f}</b>\n"
-    "الشهر: <b>${deposits_month:.4f}</b>\n"
-    "قيد الانتظار: <b>${deposits_pending:.4f}</b>\n"
+    "الإجمالي المُودَع: <b>${deposits_total:.2f}</b>\n"
+    "اليوم: <b>${deposits_today:.2f}</b>  |  الأسبوع: <b>${deposits_week:.2f}</b>\n"
+    "الشهر: <b>${deposits_month:.2f}</b>\n"
+    "قيد الانتظار: <b>${deposits_pending:.2f}</b>\n"
     "─────────────────\n"
-    "⚖️ أرصدة المستخدمين (التزامات): <b>${liabilities:.4f}</b>\n"
-    "المستردة: <b>${refunded_amt:.4f}</b>"
+    "⚖️ أرصدة المستخدمين (التزامات): <b>${liabilities:.2f}</b>\n"
+    "المستردة: <b>${refunded_amt:.2f}</b>"
   ),
   "adm_profit_services": (
     "📱 <b>أفضل الخدمات ربحاً</b>\n"
     "─────────────────\n"
     "{rows}"
   ),
-  "adm_profit_service_row":  "{rank}. <b>{name}</b>\n    🛒 {sales} مبيعة | 💵 ${revenue:.4f} | 🏭 ${cost:.4f} | ✨ ${profit:.4f}",
+  "adm_profit_service_row":  "{rank}. <b>{name}</b>\n    🛒 {sales} مبيعة | 💵 ${revenue:.2f} | 🏭 ${cost:.2f} | ✨ ${profit:.2f}",
   "adm_profit_countries": (
     "🌍 <b>أفضل الدول ربحاً</b>\n"
     "─────────────────\n"
     "{rows}"
   ),
-  "adm_profit_country_row":  "{rank}. <b>{name}</b>  🛒 {sales} | ✨ ${profit:.4f}",
+  "adm_profit_country_row":  "{rank}. <b>{name}</b>  🛒 {sales} | ✨ ${profit:.2f}",
   "adm_profit_monthly": (
     "📅 <b>اتجاه الأشهر الأخيرة</b>\n"
     "─────────────────\n"
     "{rows}"
   ),
-  "adm_profit_month_row": "📅 <b>{mo}</b>: 🛒 {sales} | 💵 ${rev:.4f} | 🏭 ${cost:.4f} | ✨ ${profit:.4f}",
+  "adm_profit_month_row": "📅 <b>{mo}</b>: 🛒 {sales} | 💵 ${rev:.2f} | 🏭 ${cost:.2f} | ✨ ${profit:.2f}",
   "adm_profit_markup_test": (
     "🔢 <b>اختبار هامش الربح</b>\n"
     "─────────────────\n"
     "النسبة الحالية: <b>{markup}%</b>\n\n"
     "مثال على الأسعار:\n"
-    "  $0.10 → <b>${p1:.4f}</b>\n"
-    "  $0.50 → <b>${p2:.4f}</b>\n"
-    "  $1.00 → <b>${p3:.4f}</b>\n"
-    "  $2.00 → <b>${p4:.4f}</b>\n"
-    "  $5.00 → <b>${p5:.4f}</b>"
+    "  $0.10 → <b>${p1:.2f}</b>\n"
+    "  $0.50 → <b>${p2:.2f}</b>\n"
+    "  $1.00 → <b>${p3:.2f}</b>\n"
+    "  $2.00 → <b>${p4:.2f}</b>\n"
+    "  $5.00 → <b>${p5:.2f}</b>"
   ),
   "btn_adm_profit_overview":  "📊 نظرة عامة",
   "btn_adm_profit_services":  "📱 الخدمات",
@@ -1439,10 +1439,10 @@ STRINGS = {
     "ملغاة: <b>{cancel}</b> | مستردة: <b>{refund}</b>\n"
     "اليوم: <b>{p24}</b> | الأسبوع: <b>{p7}</b>\n\n"
     "💰 <b>الأموال</b>\n"
-    "الإيرادات الكلية: <b>${rev:.4f}</b>\n"
-    "إيرادات اليوم: <b>${rev24:.4f}</b>\n"
-    "المستردة: <b>${refamt:.4f}</b>\n"
-    "أرصدة المستخدمين: <b>${bals:.4f}</b>\n\n"
+    "الإيرادات الكلية: <b>${rev:.2f}</b>\n"
+    "إيرادات اليوم: <b>${rev24:.2f}</b>\n"
+    "المستردة: <b>${refamt:.2f}</b>\n"
+    "أرصدة المستخدمين: <b>${bals:.2f}</b>\n\n"
     "📱 أكثر الخدمات:\n{svcs}\n\n"
     "🌍 أكثر الدول:\n{cnts}"
   ),
@@ -1452,8 +1452,8 @@ STRINGS = {
     "─────────────────\n"
     "🆔 <code>{tid}</code>\n"
     "👤 <b>{name}</b>  {uname}\n"
-    "💰 الرصيد: <b>${bal:.4f}</b>\n"
-    "💸 إجمالي الإنفاق: <b>${spent:.4f}</b>\n"
+    "💰 الرصيد: <b>${bal:.2f}</b>\n"
+    "💸 إجمالي الإنفاق: <b>${spent:.2f}</b>\n"
     "🛒 المشتريات: <b>{purchases}</b> | 💸 استردادات: <b>{refunds}</b>\n"
     "📅 انضم: {joined}\n"
     "🕐 آخر نشاط: {active}\n"
@@ -1477,9 +1477,9 @@ STRINGS = {
   "adm_enter_note":    "📝 أدخل الملاحظة للمستخدم:",
   "adm_enter_msg":     "📨 أدخل الرسالة التي ستُرسل للمستخدم:",
   "adm_invalid_amount":"❌ مبلغ غير صالح.",
-  "adm_bal_added":     "✅ تمت إضافة <b>${amount:.4f}</b>\nالرصيد الجديد: <b>${new:.4f}</b>",
-  "adm_bal_removed":   "✅ تم خصم <b>${amount:.4f}</b>\nالرصيد الجديد: <b>${new:.4f}</b>",
-  "adm_bal_set":       "✅ تم تحديد الرصيد إلى <b>${new:.4f}</b>",
+  "adm_bal_added":     "✅ تمت إضافة <b>${amount:.2f}</b>\nالرصيد الجديد: <b>${new:.2f}</b>",
+  "adm_bal_removed":   "✅ تم خصم <b>${amount:.2f}</b>\nالرصيد الجديد: <b>${new:.2f}</b>",
+  "adm_bal_set":       "✅ تم تحديد الرصيد إلى <b>${new:.2f}</b>",
   "adm_bal_err":       "❌ لا يمكن إجراء العملية.",
   "adm_ban_ok":        "✅ تم حظر {user}",
   "adm_unban_ok":      "✅ تم رفع الحظر عن {user}",
@@ -1532,7 +1532,7 @@ STRINGS = {
   "adm_active_nums": "📱 <b>الأرقام النشطة ({count})</b>",
   "adm_active_row":  "👤 {user} | 📞 <code>{num}</code>\n📲 {svc} | 🌍 {cnt} | ⏱️ {mins} دقيقة",
   "adm_top_title":   "🏆 <b>أفضل المستخدمين إنفاقاً</b>",
-  "adm_top_row":     "{rank}. <b>{name}</b> — ${spent:.4f} | {purchases} شراء",
+  "adm_top_row":     "{rank}. <b>{name}</b> — ${spent:.2f} | {purchases} شراء",
 
   "msg_options_set":    "✅ تم تحديد الرسالة. استخدم الآن:\n/msg_delete | /msg_edit | /msg_pin | /msg_unpin",
   "msg_options_cleared": "✅ تم إلغاء /msg_options",
@@ -1549,8 +1549,8 @@ STRINGS = {
   "msg_no_options":      "⚠️ يجب استخدام /msg_options أولاً على الرسالة المراد إدارتها.",
   "msg_user_not_found":  "❌ المستخدم غير موجود.",
   "msg_options_for_user":"✅ تم التحديد للمستخدم {name}. استخدم /msg_delete أو /msg_edit",
-  "notify_add":    "💰 أُضيف <b>${amount:.4f}</b> لرصيدك\n📝 {reason}\nرصيدك: <b>${bal:.4f}</b>",
-  "notify_rm":     "💸 خُصم <b>${amount:.4f}</b> من رصيدك\n📝 {reason}\nرصيدك: <b>${bal:.4f}</b>",
+  "notify_add":    "💰 أُضيف <b>${amount:.2f}</b> لرصيدك\n📝 {reason}\nرصيدك: <b>${bal:.2f}</b>",
+  "notify_rm":     "💸 خُصم <b>${amount:.2f}</b> من رصيدك\n📝 {reason}\nرصيدك: <b>${bal:.2f}</b>",
   "notify_banned": "🚫 تم حظر حسابك.",
   "notify_unbanned":"✅ تم رفع الحظر عن حسابك.",
   "notify_msg":    "📨 رسالة من الإدارة:\n\n{msg}",
@@ -1577,7 +1577,7 @@ STRINGS = {
   "yes":         "✅ Yes",
   "no":          "❌ No",
 
-  "welcome": "👋 Hello <b>{name}</b>!\n\n🤖 <b>SMS Bot</b> — Buy numbers for verification\n\n💰 Balance: <b>${bal:.4f}</b>",
+  "welcome": "👋 Hello <b>{name}</b>!\n\n🤖 <b>SMS Bot</b> — Buy numbers for verification\n\n💰 Balance: <b>${bal:.2f}</b>",
   "main_menu": "🏠 <b>Main Menu</b>",
 
   "btn_buy":      "🛒 Buy Number",
@@ -1601,26 +1601,26 @@ STRINGS = {
     "<code>{link}</code>\n\n"
     "📊 Total referred: <b>{total}</b>\n"
     "✅ Active buyers: <b>{active}</b>\n"
-    "💸 Total earned: <b>${earned:.4f}</b>\n"
-    "📅 This month: <b>${month:.4f}</b>"
+    "💸 Total earned: <b>${earned:.2f}</b>\n"
+    "📅 This month: <b>${month:.2f}</b>"
   ),
   "ref_list_title": "👥 <b>My Referrals</b>",
   "ref_list_empty": "📭 No referrals yet.\n\nShare your link to start earning!",
   "ref_row": (
     "👤 <b>{name}</b>\n"
     "🛒 Purchases: <b>{purchases}</b> | 💸 Spent: <b>${spent:.2f}</b>\n"
-    "💰 Earned from them: <b>${earned:.4f}</b> | 📅 {date}"
+    "💰 Earned from them: <b>${earned:.2f}</b> | 📅 {date}"
   ),
   "ref_earnings_title": "💰 <b>My Commissions</b>",
   "ref_earnings_empty": "📭 No commissions yet.",
-  "ref_earning_row": "💰 +<b>${amount:.4f}</b> from {name} ({pct}%) | 📅 {date}",
+  "ref_earning_row": "💰 +<b>${amount:.2f}</b> from {name} ({pct}%) | 📅 {date}",
   "ref_stats_title": "📊 <b>Referral Statistics</b>",
   "btn_ref_list":     "👥 My Referrals",
   "btn_ref_earnings": "💰 My Commissions",
   "btn_ref_stats":    "📊 Statistics",
   "btn_ref_share":    "🔗 Share Link",
   "ref_new_user_notify": "🎉 {name} joined via your referral link!",
-  "ref_commission_notify": "💰 You earned <b>${amount:.4f}</b> commission from {name}'s purchase!\nBalance: <b>${balance:.4f}</b>",
+  "ref_commission_notify": "💰 You earned <b>${amount:.2f}</b> commission from {name}'s purchase!\nBalance: <b>${balance:.2f}</b>",
   "ref_welcomed": "👋 You joined via <b>{name}</b>'s invitation!\nEnjoy the best services 🎁",
 
   "adm_ref_title":   "🎁 <b>Referral Management</b>",
@@ -1629,14 +1629,14 @@ STRINGS = {
     "─────────────────\n"
     "👥 Total Referrals: <b>{total}</b>\n"
     "✅ Active (purchased): <b>{active}</b>\n\n"
-    "💰 Total Commissions Paid: <b>${total_earned:.4f}</b>\n"
-    "📅 Today: <b>${today:.4f}</b>\n"
-    "📆 Week: <b>${week:.4f}</b>\n\n"
+    "💰 Total Commissions Paid: <b>${total_earned:.2f}</b>\n"
+    "📅 Today: <b>${today:.2f}</b>\n"
+    "📆 Week: <b>${week:.2f}</b>\n\n"
     "📈 Current Rate: <b>{pct}%</b>\n"
     "✅ Status: {status}\n\n"
     "🏆 Top Referrers:\n{top}"
   ),
-  "adm_ref_top_row":   "{rank}. <b>{name}</b> — {refs} referrals — <b>${earned:.4f}</b>",
+  "adm_ref_top_row":   "{rank}. <b>{name}</b> — {refs} referrals — <b>${earned:.2f}</b>",
   "btn_adm_ref":       "🎁 Referral System",
   "btn_adm_ref_stats": "📊 Referral Stats",
   "btn_adm_ref_list":  "📋 All Referrals",
@@ -1649,7 +1649,7 @@ STRINGS = {
   "adm_ref_all_title": "📋 <b>All Referrals</b>",
   "adm_ref_all_row": (
     "👤 <b>{referrer}</b> → <b>{referred}</b>\n"
-    "💰 +${earned:.4f} ({pct}%) | 📅 {date}"
+    "💰 +${earned:.2f} ({pct}%) | 📅 {date}"
   ),
   "adm_view_referrals": "👥 Referrals",
   "adm_usearch_prompt": "🔍 Enter Telegram ID, @username or name:",
@@ -1665,12 +1665,12 @@ STRINGS = {
     "🆔 ID: <code>{tid}</code>\n"
     "👤 Name: <b>{name}</b>  {uname}\n"
     "─────────────────\n"
-    "💰 Balance: <b>${bal:.4f}</b>\n"
-    "💸 Total Spent: <b>${spent:.4f}</b>\n"
+    "💰 Balance: <b>${bal:.2f}</b>\n"
+    "💸 Total Spent: <b>${spent:.2f}</b>\n"
     "🛒 Purchases: <b>{purchases}</b>  |  ✅ Done: <b>{done}</b>\n"
     "💸 Refunds: <b>{refunds}</b>\n"
     "─────────────────\n"
-    "🎁 Referrals: <b>{refs}</b>  |  💰 Earned: <b>${ref_earned:.4f}</b>\n"
+    "🎁 Referrals: <b>{refs}</b>  |  💰 Earned: <b>${ref_earned:.2f}</b>\n"
     "─────────────────\n"
     "📅 Joined: <b>{joined}</b>\n"
     "🕐 Last Active: <b>{active}</b>\n"
@@ -1691,7 +1691,7 @@ STRINGS = {
   "btn_adm_top_refs":    "🎁 Most Referrals",
   "adm_user_refs_title": "👥 <b>Referrals of {name}</b>",
   "adm_user_refs_empty": "📭 No referrals for this user.",
-  "adm_user_ref_row": "👤 {name} | 🛒 {purchases} | 💰 ${earned:.4f} | {date}",
+  "adm_user_ref_row": "👤 {name} | 🛒 {purchases} | 💰 ${earned:.2f} | {date}",
 
   "buy_select_category": "📂 <b>Select Category</b>",
   "buy_select_country": "🌍 <b>Select Country</b>",
@@ -1700,15 +1700,15 @@ STRINGS = {
     "✅ <b>Confirm Purchase</b>\n\n"
     "🌍 Country: <b>{country}</b>\n"
     "📱 Service: <b>{service}</b>\n"
-    "💰 Price: <b>${price:.4f}</b>\n"
-    "💳 Balance: <b>${bal:.4f}</b>"
+    "💰 Price: <b>${price:.2f}</b>\n"
+    "💳 Balance: <b>${bal:.2f}</b>"
   ),
-  "buy_insufficient": "❌ Insufficient balance\nYour: <b>${bal:.4f}</b> | Need: <b>${need:.4f}</b>",
+  "buy_insufficient": "❌ Insufficient balance\nYour: <b>${bal:.2f}</b> | Need: <b>${need:.2f}</b>",
   "buy_success": (
     "✅ <b>Purchase Successful!</b>\n\n"
     "📞 Number: <code>{num}</code>\n"
     "🌍 {country} | 📱 {service}\n"
-    "💰 Cost: <b>${cost:.4f}</b>\n"
+    "💰 Cost: <b>${cost:.2f}</b>\n"
     "🆔 Order: <code>{oid}</code>\n\n"
     "⏳ Waiting for SMS code... You'll be notified automatically"
   ),
@@ -1723,7 +1723,7 @@ STRINGS = {
     "─────────────────\n"
     "📱 <code>{num}</code>\n"
     "🌍 {country} | 📲 {service}\n"
-    "💰 ${cost:.4f} | {status}\n"
+    "💰 ${cost:.2f} | {status}\n"
     "📅 {date}\n"
     "🆔 <code>{oid}</code>"
   ),
@@ -1746,16 +1746,16 @@ STRINGS = {
   "btn_reuse_num":   "♻️ Reuse Number",
   "reuse_title": "♻️ <b>Reuse Number</b>",
   "reuse_desc": "Request a new verification code on the same number without buying a new one.",
-  "reuse_confirm": "⚠️ Request new code on\n<code>{num}</code>?\n\n💰 Cost: <b>${cost:.4f}</b>",
+  "reuse_confirm": "⚠️ Request new code on\n<code>{num}</code>?\n\n💰 Cost: <b>${cost:.2f}</b>",
   "reuse_success": "✅ Number <code>{num}</code> reactivated\n⏳ Waiting for new code...",
   "reuse_failed":  "❌ Reactivation failed: {reason}",
-  "reuse_no_balance": "❌ Insufficient balance (${need:.4f})",
+  "reuse_no_balance": "❌ Insufficient balance (${need:.2f})",
   "cancel_ask":  "⚠️ Cancel number <code>{num}</code>?",
   "cancel_ok":   "✅ Cancelled. Refund will be processed.",
   "cancel_fail": "❌ Cancel failed: {reason}",
   "resend_ok":   "✅ Resend requested.",
   "resend_fail": "❌ Resend failed: {reason}",
-  "auto_cancel": "🕐 Number <code>{num}</code> auto-cancelled after {min} min. Refunded ${amount:.4f}",
+  "auto_cancel": "🕐 Number <code>{num}</code> auto-cancelled after {min} min. Refunded ${amount:.2f}",
 
   "status_active":    "🟢 Active",
   "status_completed": "✅ Completed",
@@ -1771,14 +1771,14 @@ STRINGS = {
     "🛒 Total: <b>{total}</b>  ✅ Done: <b>{done}</b>  ❌ Cancelled: <b>{cancel}</b>\n"
     "🔍 Filter: <b>{filter_name}</b>  |  Page {page}/{pages}"
   ),
-  "history_row_btn": "{icon} {svc} — 🌍{cnt} — ${cost:.4f} — {date}",
+  "history_row_btn": "{icon} {svc} — 🌍{cnt} — ${cost:.2f} — {date}",
   "history_detail": (
     "📋 <b>Purchase Detail</b>\n"
     "─────────────────\n"
     "📞 Number: <code>{num}</code>\n"
     "🌍 Country: <b>{country}</b>\n"
     "📱 Service: <b>{service}</b>\n"
-    "💰 Cost: <b>${cost:.4f}</b>\n"
+    "💰 Cost: <b>${cost:.2f}</b>\n"
     "📅 Date: <b>{date}</b>\n"
     "🔄 Status: {status}\n"
     "🆔 Order ID: <code>{oid}</code>"
@@ -1797,19 +1797,19 @@ STRINGS = {
   "history_cleanup_ask":  "⚠️ Will delete cancelled/refunded purchases older than {days} days.\nRecords: <b>{count}</b>\nProceed?",
   "history_cleanup_done": "✅ Deleted <b>{count}</b> old records.",
   "history_cleanup_empty": "📭 No old records to delete.",
-  "history_row": "📞 <code>{num}</code> | {svc} | 🌍 {cnt}\n💰 ${cost:.4f} | {status} | {date}",
+  "history_row": "📞 <code>{num}</code> | {svc} | 🌍 {cnt}\n💰 ${cost:.2f} | {status} | {date}",
 
   "balance_title": (
     "💰 <b>Your Balance</b>\n"
     "─────────────────\n"
-    "💵 Balance: <b>${bal:.4f}</b>\n"
-    "💸 Total Spent: <b>${spent:.4f}</b>\n"
+    "💵 Balance: <b>${bal:.2f}</b>\n"
+    "💸 Total Spent: <b>${spent:.2f}</b>\n"
     "🛒 Purchases: <b>{purchases}</b>"
   ),
   "btn_deposit":  "➕ Add Funds",
   "btn_txs":      "📋 Transactions",
   "tx_title":     "📋 <b>Transaction History</b>",
-  "tx_row":       "{icon} <b>{name}</b>  {amount:+.4f}$\n📝 {desc} | 💳 ${after:.4f} | {date}",
+  "tx_row":       "{icon} <b>{name}</b>  {amount:+.2f}$\n📝 {desc} | 💳 ${after:.2f} | {date}",
   "tx_empty":     "📭 No transactions yet.",
   "deposit_info": "💳 <b>Deposit</b>\n\nSelect payment method:",
   "btn_deposit_pay":    "💳 Deposit Funds",
@@ -1845,7 +1845,7 @@ STRINGS = {
     "🎉 <b>Payment Confirmed!</b>\n\n"
     "💵 <b>${usd:.2f}</b> added to your balance\n"
     "🪙 {coin} — Track: <code>{track_id}</code>\n"
-    "💰 New Balance: <b>${balance:.4f}</b>"
+    "💰 New Balance: <b>${balance:.2f}</b>"
   ),
   "pay_history_title":  "📋 <b>Your Deposit History</b>",
   "pay_history_empty":  "📭 No deposits yet.",
@@ -1859,8 +1859,8 @@ STRINGS = {
 
   "stats_title": "📊 <b>Your Statistics</b>",
   "stats_body": (
-    "💰 Balance: <b>${bal:.4f}</b>\n"
-    "💸 Total Spent: <b>${spent:.4f}</b>\n"
+    "💰 Balance: <b>${bal:.2f}</b>\n"
+    "💸 Total Spent: <b>${spent:.2f}</b>\n"
     "🛒 Total Purchases: <b>{total}</b>\n"
     "✅ Done: <b>{done}</b> | ❌ Cancelled: <b>{cancel}</b> | 💸 Refunded: <b>{refund}</b>\n\n"
     "📱 Top Services:\n{svcs}\n\n"
@@ -1872,8 +1872,8 @@ STRINGS = {
   "profile_info": (
     "🆔 <code>{tid}</code>\n"
     "👤 <b>{name}</b>  {uname}\n"
-    "💰 Balance: <b>${bal:.4f}</b>\n"
-    "💸 Total Spent: <b>${spent:.4f}</b>\n"
+    "💰 Balance: <b>${bal:.2f}</b>\n"
+    "💸 Total Spent: <b>${spent:.2f}</b>\n"
     "🛒 Purchases: <b>{purchases}</b>\n"
     "📅 Joined: {joined}\n"
     "🕐 Last Active: {active}\n"
@@ -1910,7 +1910,7 @@ STRINGS = {
     "─────────────────\n"
     "Active Key: <code>{active_preview}</code>\n"
     "Saved Keys: <b>{count}</b>\n"
-    "Account Balance: <b>${balance:.4f}</b>"
+    "Account Balance: <b>${balance:.2f}</b>"
   ),
   "adm_smspool_key_row":  "{status} <code>{preview}</code>  |  📝 {label}",
   "adm_smspool_enter_key": "🔑 Enter new SMSPool API key:",
@@ -1918,7 +1918,7 @@ STRINGS = {
   "adm_smspool_added":    "✅ Key added successfully.",
   "adm_smspool_deleted":  "✅ Key deleted.",
   "adm_smspool_activated":"✅ Key set as active.",
-  "adm_smspool_balance":  "💰 Account Balance: <b>${balance:.4f}</b>",
+  "adm_smspool_balance":  "💰 Account Balance: <b>${balance:.2f}</b>",
   "adm_smspool_no_keys":  "📭 No keys saved. Add one.",
   "adm_smspool_invalid":  "❌ Key invalid or could not be verified.",
   "btn_adm_smspool_add":  "➕ Add Key",
@@ -1935,65 +1935,65 @@ STRINGS = {
     "✅ Completed: <b>{completed}</b>  |  💸 Refunded: <b>{refunded}</b>\n"
     "─────────────────\n"
     "💵 <b>Revenue (what customers paid)</b>\n"
-    "Total: <b>${revenue_total:.4f}</b>\n"
-    "Today: <b>${revenue_today:.4f}</b>  |  Week: <b>${revenue_week:.4f}</b>  |  Month: <b>${revenue_month:.4f}</b>\n"
+    "Total: <b>${revenue_total:.2f}</b>\n"
+    "Today: <b>${revenue_today:.2f}</b>  |  Week: <b>${revenue_week:.2f}</b>  |  Month: <b>${revenue_month:.2f}</b>\n"
     "─────────────────\n"
     "🏭 <b>Capital Cost (paid to SMSPool)</b>\n"
-    "Total: <b>${cost_total:.4f}</b>\n"
-    "Today: <b>${cost_today:.4f}</b>  |  Week: <b>${cost_week:.4f}</b>  |  Month: <b>${cost_month:.4f}</b>\n"
+    "Total: <b>${cost_total:.2f}</b>\n"
+    "Today: <b>${cost_today:.2f}</b>  |  Week: <b>${cost_week:.2f}</b>  |  Month: <b>${cost_month:.2f}</b>\n"
     "─────────────────\n"
     "📤 <b>Commissions Paid (referral)</b>\n"
-    "Total: <b>${commission_total:.4f}</b>  |  Month: <b>${commission_month:.4f}</b>\n"
+    "Total: <b>${commission_total:.2f}</b>  |  Month: <b>${commission_month:.2f}</b>\n"
     "─────────────────\n"
     "✨ <b>Gross Profit (before commissions)</b>\n"
-    "Total: <b>${gross_total:.4f}</b>  |  Today: <b>${gross_today:.4f}</b>\n"
-    "Week: <b>${gross_week:.4f}</b>  |  Month: <b>${gross_month:.4f}</b>\n"
+    "Total: <b>${gross_total:.2f}</b>  |  Today: <b>${gross_today:.2f}</b>\n"
+    "Week: <b>${gross_week:.2f}</b>  |  Month: <b>${gross_month:.2f}</b>\n"
     "Margin: <b>{margin:.2f}%</b>\n"
     "─────────────────\n"
     "💎 <b>Net Profit (after commissions)</b>\n"
-    "Total: <b>${net_total:.4f}</b>  |  Today: <b>${net_today:.4f}</b>\n"
-    "Week: <b>${net_week:.4f}</b>  |  Month: <b>${net_month:.4f}</b>\n"
+    "Total: <b>${net_total:.2f}</b>  |  Today: <b>${net_today:.2f}</b>\n"
+    "Week: <b>${net_week:.2f}</b>  |  Month: <b>${net_month:.2f}</b>\n"
     "Net Margin: <b>{net_margin:.2f}%</b>"
   ),
   "adm_profit_deposits": (
     "💳 <b>Deposits</b>\n"
     "─────────────────\n"
-    "Total Deposited: <b>${deposits_total:.4f}</b>\n"
-    "Today: <b>${deposits_today:.4f}</b>  |  Week: <b>${deposits_week:.4f}</b>\n"
-    "Month: <b>${deposits_month:.4f}</b>\n"
-    "Pending: <b>${deposits_pending:.4f}</b>\n"
+    "Total Deposited: <b>${deposits_total:.2f}</b>\n"
+    "Today: <b>${deposits_today:.2f}</b>  |  Week: <b>${deposits_week:.2f}</b>\n"
+    "Month: <b>${deposits_month:.2f}</b>\n"
+    "Pending: <b>${deposits_pending:.2f}</b>\n"
     "─────────────────\n"
-    "⚖️ User Balances (liabilities): <b>${liabilities:.4f}</b>\n"
-    "Refunded Amount: <b>${refunded_amt:.4f}</b>"
+    "⚖️ User Balances (liabilities): <b>${liabilities:.2f}</b>\n"
+    "Refunded Amount: <b>${refunded_amt:.2f}</b>"
   ),
   "adm_profit_services": (
     "📱 <b>Top Services by Profit</b>\n"
     "─────────────────\n"
     "{rows}"
   ),
-  "adm_profit_service_row":  "{rank}. <b>{name}</b>\n    🛒 {sales} sold | 💵 ${revenue:.4f} | 🏭 ${cost:.4f} | ✨ ${profit:.4f}",
+  "adm_profit_service_row":  "{rank}. <b>{name}</b>\n    🛒 {sales} sold | 💵 ${revenue:.2f} | 🏭 ${cost:.2f} | ✨ ${profit:.2f}",
   "adm_profit_countries": (
     "🌍 <b>Top Countries by Profit</b>\n"
     "─────────────────\n"
     "{rows}"
   ),
-  "adm_profit_country_row":  "{rank}. <b>{name}</b>  🛒 {sales} | ✨ ${profit:.4f}",
+  "adm_profit_country_row":  "{rank}. <b>{name}</b>  🛒 {sales} | ✨ ${profit:.2f}",
   "adm_profit_monthly": (
     "📅 <b>Monthly Trend</b>\n"
     "─────────────────\n"
     "{rows}"
   ),
-  "adm_profit_month_row": "📅 <b>{mo}</b>: 🛒 {sales} | 💵 ${rev:.4f} | 🏭 ${cost:.4f} | ✨ ${profit:.4f}",
+  "adm_profit_month_row": "📅 <b>{mo}</b>: 🛒 {sales} | 💵 ${rev:.2f} | 🏭 ${cost:.2f} | ✨ ${profit:.2f}",
   "adm_profit_markup_test": (
     "🔢 <b>Markup Test</b>\n"
     "─────────────────\n"
     "Current rate: <b>{markup}%</b>\n\n"
     "Price examples:\n"
-    "  $0.10 → <b>${p1:.4f}</b>\n"
-    "  $0.50 → <b>${p2:.4f}</b>\n"
-    "  $1.00 → <b>${p3:.4f}</b>\n"
-    "  $2.00 → <b>${p4:.4f}</b>\n"
-    "  $5.00 → <b>${p5:.4f}</b>"
+    "  $0.10 → <b>${p1:.2f}</b>\n"
+    "  $0.50 → <b>${p2:.2f}</b>\n"
+    "  $1.00 → <b>${p3:.2f}</b>\n"
+    "  $2.00 → <b>${p4:.2f}</b>\n"
+    "  $5.00 → <b>${p5:.2f}</b>"
   ),
   "btn_adm_profit_overview":  "📊 Overview",
   "btn_adm_profit_services":  "📱 Services",
@@ -2076,10 +2076,10 @@ STRINGS = {
     "Cancelled: <b>{cancel}</b> | Refunded: <b>{refund}</b>\n"
     "Today: <b>{p24}</b> | This Week: <b>{p7}</b>\n\n"
     "💰 <b>Financials</b>\n"
-    "Total Revenue: <b>${rev:.4f}</b>\n"
-    "Today Revenue: <b>${rev24:.4f}</b>\n"
-    "Refunded: <b>${refamt:.4f}</b>\n"
-    "User Balances: <b>${bals:.4f}</b>\n\n"
+    "Total Revenue: <b>${rev:.2f}</b>\n"
+    "Today Revenue: <b>${rev24:.2f}</b>\n"
+    "Refunded: <b>${refamt:.2f}</b>\n"
+    "User Balances: <b>${bals:.2f}</b>\n\n"
     "📱 Top Services:\n{svcs}\n\n"
     "🌍 Top Countries:\n{cnts}"
   ),
@@ -2089,8 +2089,8 @@ STRINGS = {
     "─────────────────\n"
     "🆔 <code>{tid}</code>\n"
     "👤 <b>{name}</b>  {uname}\n"
-    "💰 Balance: <b>${bal:.4f}</b>\n"
-    "💸 Total Spent: <b>${spent:.4f}</b>\n"
+    "💰 Balance: <b>${bal:.2f}</b>\n"
+    "💸 Total Spent: <b>${spent:.2f}</b>\n"
     "🛒 Purchases: <b>{purchases}</b> | 💸 Refunds: <b>{refunds}</b>\n"
     "📅 Joined: {joined}\n"
     "🕐 Last Active: {active}\n"
@@ -2114,9 +2114,9 @@ STRINGS = {
   "adm_enter_note":    "📝 Enter note for user:",
   "adm_enter_msg":     "📨 Enter message to send to user:",
   "adm_invalid_amount":"❌ Invalid amount.",
-  "adm_bal_added":     "✅ Added <b>${amount:.4f}</b>\nNew balance: <b>${new:.4f}</b>",
-  "adm_bal_removed":   "✅ Removed <b>${amount:.4f}</b>\nNew balance: <b>${new:.4f}</b>",
-  "adm_bal_set":       "✅ Balance set to <b>${new:.4f}</b>",
+  "adm_bal_added":     "✅ Added <b>${amount:.2f}</b>\nNew balance: <b>${new:.2f}</b>",
+  "adm_bal_removed":   "✅ Removed <b>${amount:.2f}</b>\nNew balance: <b>${new:.2f}</b>",
+  "adm_bal_set":       "✅ Balance set to <b>${new:.2f}</b>",
   "adm_bal_err":       "❌ Cannot process operation.",
   "adm_ban_ok":        "✅ Banned {user}",
   "adm_unban_ok":      "✅ Unbanned {user}",
@@ -2169,7 +2169,7 @@ STRINGS = {
   "adm_active_nums": "📱 <b>Active Numbers ({count})</b>",
   "adm_active_row":  "👤 {user} | 📞 <code>{num}</code>\n📲 {svc} | 🌍 {cnt} | ⏱️ {mins} min",
   "adm_top_title":   "🏆 <b>Top Users by Spending</b>",
-  "adm_top_row":     "{rank}. <b>{name}</b> — ${spent:.4f} | {purchases} purchases",
+  "adm_top_row":     "{rank}. <b>{name}</b> — ${spent:.2f} | {purchases} purchases",
 
   "msg_options_set":    "✅ Message selected. Now use:\n/msg_delete | /msg_edit | /msg_pin | /msg_unpin",
   "msg_options_cleared": "✅ /msg_options cancelled",
@@ -2186,8 +2186,8 @@ STRINGS = {
   "msg_no_options":      "⚠️ Use /msg_options first by replying to the target message.",
   "msg_user_not_found":  "❌ User not found.",
   "msg_options_for_user":"✅ Targeting {name}. Use /msg_delete or /msg_edit",
-  "notify_add":    "💰 <b>${amount:.4f}</b> added to your balance\n📝 {reason}\nBalance: <b>${bal:.4f}</b>",
-  "notify_rm":     "💸 <b>${amount:.4f}</b> deducted\n📝 {reason}\nBalance: <b>${bal:.4f}</b>",
+  "notify_add":    "💰 <b>${amount:.2f}</b> added to your balance\n📝 {reason}\nBalance: <b>${bal:.2f}</b>",
+  "notify_rm":     "💸 <b>${amount:.2f}</b> deducted\n📝 {reason}\nBalance: <b>${bal:.2f}</b>",
   "notify_banned": "🚫 Your account has been banned.",
   "notify_unbanned":"✅ Your ban has been lifted.",
   "notify_msg":    "📨 Message from Admin:\n\n{msg}",
@@ -2242,10 +2242,12 @@ def _kb(*rows): return KB(list(rows))
 def back_kb(lang, cb): return _kb(_row(Btn(t(lang,"back"), callback_data=cb)))
 
 def buy_categories_kb(lang):
-    return _kb(
-        _row(Btn("📱 SMSPool (High Quality)", callback_data="b:s")),
+    rows = [
+        _row(Btn("⚡ " + ("تفعيل سريع" if lang=="ar" else "Fast Activation"), callback_data="b:s:0")),
+        _row(Btn("🎖️ " + ("أرقام مميزة" if lang=="ar" else "Premium Numbers"), callback_data="b:s:1")),
         _row(Btn(t(lang,"back"), callback_data="mm"))
-    )
+    ]
+    return KB(rows)
 
 def main_menu_kb(lang, is_admin=False):
     # Layout requested by user
@@ -2283,11 +2285,23 @@ def countries_kb(lang, countries, page=0):
     rows.append([Btn(t(lang,"back"), callback_data="b:cat")])
     return KB(rows)
 
-def services_kb(lang, services, cid, page=0):
+def services_kb(lang, services, cid, page=0, markup_pct=0.0):
     start = page * SERVICES_PER
     chunk = services[start:start+SERVICES_PER]
     total = (len(services)+SERVICES_PER-1)//SERVICES_PER
-    rows  = [[Btn(f"📱 {s.get('name','?')}  💲{s.get('price','?')}", callback_data=f"b:sv:{cid}:{s.get('ID',s.get('id',''))}")] for s in chunk]
+
+    rows = []
+    for s in chunk:
+        try:
+            base_price = float(s.get("price", 0))
+            # Calculate markup live
+            display_price = round(base_price * (1 + markup_pct / 100), 2)
+        except:
+            display_price = s.get("price", "?")
+
+        btn_text = f"📱 {s.get('name','?')} — ${display_price}"
+        rows.append([Btn(btn_text, callback_data=f"b:sv:{cid}:{s.get('ID',s.get('id',''))}")])
+
     nav   = []
     if page > 0: nav.append(Btn(t(lang,"prev"), callback_data=f"b:sp:{cid}:{page-1}"))
     nav.append(Btn(t(lang,"page",p=page+1,t=total), callback_data="noop"))
