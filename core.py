@@ -2243,7 +2243,7 @@ def back_kb(lang, cb): return _kb(_row(Btn(t(lang,"back"), callback_data=cb)))
 
 def buy_categories_kb(lang):
     rows = [
-        _row(Btn("⚡ " + ("تفعيل سريع" if lang=="ar" else "Fast Activation"), callback_data="b:s:0")),
+        _row(Btn("⚡ " + ("تفعيل فوري" if lang=="ar" else "Instant Activation"), callback_data="b:s:0")),
         _row(Btn("🎖️ " + ("أرقام مميزة" if lang=="ar" else "Premium Numbers"), callback_data="b:s:1")),
         _row(Btn(t(lang,"back"), callback_data="mm"))
     ]
