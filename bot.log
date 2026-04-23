@@ -1,278 +1,206 @@
-2026-04-21 12:53:22,519 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
-2026-04-21 12:53:22,519 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
-2026-04-21 12:53:22,521 | INFO     | __main__ | Initialising database...
-2026-04-21 12:53:22,521 | INFO     | __main__ | Initialising database...
-2026-04-21 12:53:22,617 | INFO     | __main__ | Initialising OxaPay with key: YLFY1E...1CMB
-2026-04-21 12:53:22,617 | INFO     | __main__ | Initialising OxaPay with key: YLFY1E...1CMB
-2026-04-21 12:53:22,620 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-04-21 12:53:22,620 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-04-21 12:53:22,621 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-04-21 12:53:22,621 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2026-04-21 12:53:22,621 | INFO     | __main__ | Background jobs started via JobQueue
-2026-04-21 12:53:22,621 | INFO     | __main__ | Background jobs started via JobQueue
-2026-04-21 12:53:22,739 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
-2026-04-21 12:53:22,739 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
-2026-04-21 12:53:22,744 | INFO     | apscheduler.scheduler | Added job "sms_checker_job" to job store "default"
-2026-04-21 12:53:22,744 | INFO     | apscheduler.scheduler | Added job "sms_checker_job" to job store "default"
-2026-04-21 12:53:22,744 | INFO     | apscheduler.scheduler | Added job "payment_poller_job" to job store "default"
-2026-04-21 12:53:22,744 | INFO     | apscheduler.scheduler | Added job "payment_poller_job" to job store "default"
-2026-04-21 12:53:22,745 | INFO     | apscheduler.scheduler | Scheduler started
-2026-04-21 12:53:22,745 | INFO     | apscheduler.scheduler | Scheduler started
-2026-04-21 12:53:22,745 | INFO     | telegram.ext.Application | Application started
-2026-04-21 12:53:22,745 | INFO     | telegram.ext.Application | Application started
-2026-04-21 12:53:27,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:42 UTC)" (scheduled at 2026-04-21 12:53:27.619562+00:00)
-2026-04-21 12:53:27,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:42 UTC)" (scheduled at 2026-04-21 12:53:27.619562+00:00)
-2026-04-21 12:53:27,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:42 UTC)" executed successfully
-2026-04-21 12:53:27,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:42 UTC)" executed successfully
-2026-04-21 12:53:32,626 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:02 UTC)" (scheduled at 2026-04-21 12:53:32.621059+00:00)
-2026-04-21 12:53:32,626 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:02 UTC)" (scheduled at 2026-04-21 12:53:32.621059+00:00)
-2026-04-21 12:53:32,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:02 UTC)" executed successfully
-2026-04-21 12:53:32,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:02 UTC)" executed successfully
-2026-04-21 12:53:33,108 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:53:33,108 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:53:42,630 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:57 UTC)" (scheduled at 2026-04-21 12:53:42.619562+00:00)
-2026-04-21 12:53:42,630 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:57 UTC)" (scheduled at 2026-04-21 12:53:42.619562+00:00)
-2026-04-21 12:53:42,633 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:57 UTC)" executed successfully
-2026-04-21 12:53:42,633 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:53:57 UTC)" executed successfully
-2026-04-21 12:53:43,226 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:53:43,226 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:53:53,344 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:53:53,344 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:53:57,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:12 UTC)" (scheduled at 2026-04-21 12:53:57.619562+00:00)
-2026-04-21 12:53:57,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:12 UTC)" (scheduled at 2026-04-21 12:53:57.619562+00:00)
-2026-04-21 12:53:57,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:12 UTC)" executed successfully
-2026-04-21 12:53:57,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:12 UTC)" executed successfully
-2026-04-21 12:54:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:32 UTC)" (scheduled at 2026-04-21 12:54:02.621059+00:00)
-2026-04-21 12:54:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:32 UTC)" (scheduled at 2026-04-21 12:54:02.621059+00:00)
-2026-04-21 12:54:02,631 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:32 UTC)" executed successfully
-2026-04-21 12:54:02,631 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:54:32 UTC)" executed successfully
-2026-04-21 12:54:03,462 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:03,462 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:12,629 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:27 UTC)" (scheduled at 2026-04-21 12:54:12.619562+00:00)
-2026-04-21 12:54:12,629 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:27 UTC)" (scheduled at 2026-04-21 12:54:12.619562+00:00)
-2026-04-21 12:54:12,632 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:27 UTC)" executed successfully
-2026-04-21 12:54:12,632 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:27 UTC)" executed successfully
-2026-04-21 12:54:13,579 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:13,579 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:23,696 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:23,696 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:27,626 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:42 UTC)" (scheduled at 2026-04-21 12:54:27.619562+00:00)
-2026-04-21 12:54:27,626 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:42 UTC)" (scheduled at 2026-04-21 12:54:27.619562+00:00)
-2026-04-21 12:54:27,629 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:42 UTC)" executed successfully
-2026-04-21 12:54:27,629 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:42 UTC)" executed successfully
-2026-04-21 12:54:32,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:02 UTC)" (scheduled at 2026-04-21 12:54:32.621059+00:00)
-2026-04-21 12:54:32,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:02 UTC)" (scheduled at 2026-04-21 12:54:32.621059+00:00)
-2026-04-21 12:54:32,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:02 UTC)" executed successfully
-2026-04-21 12:54:32,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:02 UTC)" executed successfully
-2026-04-21 12:54:33,813 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:33,813 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:42,630 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:57 UTC)" (scheduled at 2026-04-21 12:54:42.619562+00:00)
-2026-04-21 12:54:42,630 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:57 UTC)" (scheduled at 2026-04-21 12:54:42.619562+00:00)
-2026-04-21 12:54:42,634 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:57 UTC)" executed successfully
-2026-04-21 12:54:42,634 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:54:57 UTC)" executed successfully
-2026-04-21 12:54:43,931 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:43,931 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:54,050 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:54,050 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:54:57,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:12 UTC)" (scheduled at 2026-04-21 12:54:57.619562+00:00)
-2026-04-21 12:54:57,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:12 UTC)" (scheduled at 2026-04-21 12:54:57.619562+00:00)
-2026-04-21 12:54:57,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:12 UTC)" executed successfully
-2026-04-21 12:54:57,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:12 UTC)" executed successfully
-2026-04-21 12:55:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:32 UTC)" (scheduled at 2026-04-21 12:55:02.621059+00:00)
-2026-04-21 12:55:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:32 UTC)" (scheduled at 2026-04-21 12:55:02.621059+00:00)
-2026-04-21 12:55:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:32 UTC)" executed successfully
-2026-04-21 12:55:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:55:32 UTC)" executed successfully
-2026-04-21 12:55:04,167 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:04,167 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:12,629 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:27 UTC)" (scheduled at 2026-04-21 12:55:12.619562+00:00)
-2026-04-21 12:55:12,629 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:27 UTC)" (scheduled at 2026-04-21 12:55:12.619562+00:00)
-2026-04-21 12:55:12,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:27 UTC)" executed successfully
-2026-04-21 12:55:12,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:27 UTC)" executed successfully
-2026-04-21 12:55:14,285 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:14,285 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:24,402 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:24,402 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:27,623 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:42 UTC)" (scheduled at 2026-04-21 12:55:27.619562+00:00)
-2026-04-21 12:55:27,623 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:42 UTC)" (scheduled at 2026-04-21 12:55:27.619562+00:00)
-2026-04-21 12:55:27,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:42 UTC)" executed successfully
-2026-04-21 12:55:27,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:42 UTC)" executed successfully
-2026-04-21 12:55:32,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:02 UTC)" (scheduled at 2026-04-21 12:55:32.621059+00:00)
-2026-04-21 12:55:32,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:02 UTC)" (scheduled at 2026-04-21 12:55:32.621059+00:00)
-2026-04-21 12:55:32,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:02 UTC)" executed successfully
-2026-04-21 12:55:32,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:02 UTC)" executed successfully
-2026-04-21 12:55:34,521 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:34,521 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:42,629 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:57 UTC)" (scheduled at 2026-04-21 12:55:42.619562+00:00)
-2026-04-21 12:55:42,629 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:57 UTC)" (scheduled at 2026-04-21 12:55:42.619562+00:00)
-2026-04-21 12:55:42,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:57 UTC)" executed successfully
-2026-04-21 12:55:42,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:55:57 UTC)" executed successfully
-2026-04-21 12:55:44,640 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:44,640 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:54,764 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:54,764 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:55:57,623 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:12 UTC)" (scheduled at 2026-04-21 12:55:57.619562+00:00)
-2026-04-21 12:55:57,623 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:12 UTC)" (scheduled at 2026-04-21 12:55:57.619562+00:00)
-2026-04-21 12:55:57,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:12 UTC)" executed successfully
-2026-04-21 12:55:57,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:12 UTC)" executed successfully
-2026-04-21 12:56:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:32 UTC)" (scheduled at 2026-04-21 12:56:02.621059+00:00)
-2026-04-21 12:56:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:32 UTC)" (scheduled at 2026-04-21 12:56:02.621059+00:00)
-2026-04-21 12:56:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:32 UTC)" executed successfully
-2026-04-21 12:56:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:56:32 UTC)" executed successfully
-2026-04-21 12:56:04,883 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:04,883 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:12,628 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:27 UTC)" (scheduled at 2026-04-21 12:56:12.619562+00:00)
-2026-04-21 12:56:12,628 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:27 UTC)" (scheduled at 2026-04-21 12:56:12.619562+00:00)
-2026-04-21 12:56:12,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:27 UTC)" executed successfully
-2026-04-21 12:56:12,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:27 UTC)" executed successfully
-2026-04-21 12:56:15,000 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:15,000 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:25,119 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:25,119 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:27,622 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:42 UTC)" (scheduled at 2026-04-21 12:56:27.619562+00:00)
-2026-04-21 12:56:27,622 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:42 UTC)" (scheduled at 2026-04-21 12:56:27.619562+00:00)
-2026-04-21 12:56:27,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:42 UTC)" executed successfully
-2026-04-21 12:56:27,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:42 UTC)" executed successfully
-2026-04-21 12:56:32,626 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:02 UTC)" (scheduled at 2026-04-21 12:56:32.621059+00:00)
-2026-04-21 12:56:32,626 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:02 UTC)" (scheduled at 2026-04-21 12:56:32.621059+00:00)
-2026-04-21 12:56:32,629 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:02 UTC)" executed successfully
-2026-04-21 12:56:32,629 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:02 UTC)" executed successfully
-2026-04-21 12:56:35,237 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:35,237 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:42,628 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:57 UTC)" (scheduled at 2026-04-21 12:56:42.619562+00:00)
-2026-04-21 12:56:42,628 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:57 UTC)" (scheduled at 2026-04-21 12:56:42.619562+00:00)
-2026-04-21 12:56:42,632 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:57 UTC)" executed successfully
-2026-04-21 12:56:42,632 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:56:57 UTC)" executed successfully
-2026-04-21 12:56:45,359 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:45,359 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:55,475 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:55,475 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:56:57,622 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:12 UTC)" (scheduled at 2026-04-21 12:56:57.619562+00:00)
-2026-04-21 12:56:57,622 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:12 UTC)" (scheduled at 2026-04-21 12:56:57.619562+00:00)
-2026-04-21 12:56:57,625 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:12 UTC)" executed successfully
-2026-04-21 12:56:57,625 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:12 UTC)" executed successfully
-2026-04-21 12:57:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:32 UTC)" (scheduled at 2026-04-21 12:57:02.621059+00:00)
-2026-04-21 12:57:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:32 UTC)" (scheduled at 2026-04-21 12:57:02.621059+00:00)
-2026-04-21 12:57:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:32 UTC)" executed successfully
-2026-04-21 12:57:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:57:32 UTC)" executed successfully
-2026-04-21 12:57:05,593 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:05,593 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:12,627 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:27 UTC)" (scheduled at 2026-04-21 12:57:12.619562+00:00)
-2026-04-21 12:57:12,627 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:27 UTC)" (scheduled at 2026-04-21 12:57:12.619562+00:00)
-2026-04-21 12:57:12,630 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:27 UTC)" executed successfully
-2026-04-21 12:57:12,630 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:27 UTC)" executed successfully
-2026-04-21 12:57:15,710 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:15,710 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:25,828 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:25,828 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:27,623 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:42 UTC)" (scheduled at 2026-04-21 12:57:27.619562+00:00)
-2026-04-21 12:57:27,623 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:42 UTC)" (scheduled at 2026-04-21 12:57:27.619562+00:00)
-2026-04-21 12:57:27,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:42 UTC)" executed successfully
-2026-04-21 12:57:27,626 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:42 UTC)" executed successfully
-2026-04-21 12:57:32,624 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:02 UTC)" (scheduled at 2026-04-21 12:57:32.621059+00:00)
-2026-04-21 12:57:32,624 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:02 UTC)" (scheduled at 2026-04-21 12:57:32.621059+00:00)
-2026-04-21 12:57:32,628 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:02 UTC)" executed successfully
-2026-04-21 12:57:32,628 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:02 UTC)" executed successfully
-2026-04-21 12:57:35,947 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:35,947 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:42,627 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:57 UTC)" (scheduled at 2026-04-21 12:57:42.619562+00:00)
-2026-04-21 12:57:42,627 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:57 UTC)" (scheduled at 2026-04-21 12:57:42.619562+00:00)
-2026-04-21 12:57:42,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:57 UTC)" executed successfully
-2026-04-21 12:57:42,631 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:57:57 UTC)" executed successfully
-2026-04-21 12:57:46,064 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:46,064 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:56,184 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:56,184 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:57:57,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:12 UTC)" (scheduled at 2026-04-21 12:57:57.619562+00:00)
-2026-04-21 12:57:57,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:12 UTC)" (scheduled at 2026-04-21 12:57:57.619562+00:00)
-2026-04-21 12:57:57,625 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:12 UTC)" executed successfully
-2026-04-21 12:57:57,625 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:12 UTC)" executed successfully
-2026-04-21 12:58:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:32 UTC)" (scheduled at 2026-04-21 12:58:02.621059+00:00)
-2026-04-21 12:58:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:32 UTC)" (scheduled at 2026-04-21 12:58:02.621059+00:00)
-2026-04-21 12:58:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:32 UTC)" executed successfully
-2026-04-21 12:58:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:58:32 UTC)" executed successfully
-2026-04-21 12:58:06,306 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:06,306 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:12,627 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:27 UTC)" (scheduled at 2026-04-21 12:58:12.619562+00:00)
-2026-04-21 12:58:12,627 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:27 UTC)" (scheduled at 2026-04-21 12:58:12.619562+00:00)
-2026-04-21 12:58:12,630 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:27 UTC)" executed successfully
-2026-04-21 12:58:12,630 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:27 UTC)" executed successfully
-2026-04-21 12:58:16,426 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:16,426 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:26,543 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:26,543 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:27,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:42 UTC)" (scheduled at 2026-04-21 12:58:27.619562+00:00)
-2026-04-21 12:58:27,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:42 UTC)" (scheduled at 2026-04-21 12:58:27.619562+00:00)
-2026-04-21 12:58:27,624 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:42 UTC)" executed successfully
-2026-04-21 12:58:27,624 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:42 UTC)" executed successfully
-2026-04-21 12:58:32,624 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:02 UTC)" (scheduled at 2026-04-21 12:58:32.621059+00:00)
-2026-04-21 12:58:32,624 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:02 UTC)" (scheduled at 2026-04-21 12:58:32.621059+00:00)
-2026-04-21 12:58:32,627 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:02 UTC)" executed successfully
-2026-04-21 12:58:32,627 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:02 UTC)" executed successfully
-2026-04-21 12:58:36,661 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:36,661 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:42,626 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:57 UTC)" (scheduled at 2026-04-21 12:58:42.619562+00:00)
-2026-04-21 12:58:42,626 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:57 UTC)" (scheduled at 2026-04-21 12:58:42.619562+00:00)
-2026-04-21 12:58:42,629 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:57 UTC)" executed successfully
-2026-04-21 12:58:42,629 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:58:57 UTC)" executed successfully
-2026-04-21 12:58:46,779 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:46,779 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:56,897 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:56,897 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:58:57,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:12 UTC)" (scheduled at 2026-04-21 12:58:57.619562+00:00)
-2026-04-21 12:58:57,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:12 UTC)" (scheduled at 2026-04-21 12:58:57.619562+00:00)
-2026-04-21 12:58:57,624 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:12 UTC)" executed successfully
-2026-04-21 12:58:57,624 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:12 UTC)" executed successfully
-2026-04-21 12:59:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:32 UTC)" (scheduled at 2026-04-21 12:59:02.621059+00:00)
-2026-04-21 12:59:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:32 UTC)" (scheduled at 2026-04-21 12:59:02.621059+00:00)
-2026-04-21 12:59:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:32 UTC)" executed successfully
-2026-04-21 12:59:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 12:59:32 UTC)" executed successfully
-2026-04-21 12:59:07,014 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:07,014 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:12,626 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:27 UTC)" (scheduled at 2026-04-21 12:59:12.619562+00:00)
-2026-04-21 12:59:12,626 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:27 UTC)" (scheduled at 2026-04-21 12:59:12.619562+00:00)
-2026-04-21 12:59:12,629 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:27 UTC)" executed successfully
-2026-04-21 12:59:12,629 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:27 UTC)" executed successfully
-2026-04-21 12:59:17,131 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:17,131 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:27,248 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:27,248 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:27,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:42 UTC)" (scheduled at 2026-04-21 12:59:27.619562+00:00)
-2026-04-21 12:59:27,621 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:42 UTC)" (scheduled at 2026-04-21 12:59:27.619562+00:00)
-2026-04-21 12:59:27,624 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:42 UTC)" executed successfully
-2026-04-21 12:59:27,624 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:42 UTC)" executed successfully
-2026-04-21 12:59:32,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:02 UTC)" (scheduled at 2026-04-21 12:59:32.621059+00:00)
-2026-04-21 12:59:32,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:02 UTC)" (scheduled at 2026-04-21 12:59:32.621059+00:00)
-2026-04-21 12:59:32,629 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:02 UTC)" executed successfully
-2026-04-21 12:59:32,629 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:02 UTC)" executed successfully
-2026-04-21 12:59:37,365 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:37,365 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:42,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:57 UTC)" (scheduled at 2026-04-21 12:59:42.619562+00:00)
-2026-04-21 12:59:42,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:57 UTC)" (scheduled at 2026-04-21 12:59:42.619562+00:00)
-2026-04-21 12:59:42,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:57 UTC)" executed successfully
-2026-04-21 12:59:42,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 12:59:57 UTC)" executed successfully
-2026-04-21 12:59:47,483 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:47,483 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:57,599 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:57,599 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 12:59:57,620 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:12 UTC)" (scheduled at 2026-04-21 12:59:57.619562+00:00)
-2026-04-21 12:59:57,620 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:12 UTC)" (scheduled at 2026-04-21 12:59:57.619562+00:00)
-2026-04-21 12:59:57,623 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:12 UTC)" executed successfully
-2026-04-21 12:59:57,623 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:12 UTC)" executed successfully
-2026-04-21 13:00:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:32 UTC)" (scheduled at 2026-04-21 13:00:02.621059+00:00)
-2026-04-21 13:00:02,627 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:32 UTC)" (scheduled at 2026-04-21 13:00:02.621059+00:00)
-2026-04-21 13:00:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:32 UTC)" executed successfully
-2026-04-21 13:00:02,630 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-21 13:00:32 UTC)" executed successfully
-2026-04-21 13:00:07,718 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 13:00:07,718 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 13:00:12,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:27 UTC)" (scheduled at 2026-04-21 13:00:12.619562+00:00)
-2026-04-21 13:00:12,624 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:27 UTC)" (scheduled at 2026-04-21 13:00:12.619562+00:00)
-2026-04-21 13:00:12,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:27 UTC)" executed successfully
-2026-04-21 13:00:12,627 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-21 13:00:27 UTC)" executed successfully
-2026-04-21 13:00:15,924 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 13:00:15,924 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 200 OK"
-2026-04-21 13:00:15,925 | INFO     | telegram.ext.Application | Application is stopping. This might take a moment.
-2026-04-21 13:00:15,925 | INFO     | telegram.ext.Application | Application is stopping. This might take a moment.
-2026-04-21 13:00:15,925 | INFO     | apscheduler.scheduler | Scheduler has been shut down
-2026-04-21 13:00:15,925 | INFO     | apscheduler.scheduler | Scheduler has been shut down
-2026-04-21 13:00:15,936 | INFO     | telegram.ext.Application | Application.stop() complete
-2026-04-21 13:00:15,936 | INFO     | telegram.ext.Application | Application.stop() complete
+2026-04-23 12:28:53,868 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
+2026-04-23 12:28:53,868 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
+2026-04-23 12:28:53,870 | INFO     | __main__ | Initialising database...
+2026-04-23 12:28:53,870 | INFO     | __main__ | Initialising database...
+2026-04-23 12:28:53,922 | INFO     | __main__ | Initialising OxaPay with key: YLFY1E...1CMB
+2026-04-23 12:28:53,922 | INFO     | __main__ | Initialising OxaPay with key: YLFY1E...1CMB
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | __main__ | Background jobs started via JobQueue
+2026-04-23 12:28:53,924 | INFO     | __main__ | Background jobs started via JobQueue
+2026-04-23 12:28:54,039 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
+2026-04-23 12:28:54,039 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "sms_checker_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "sms_checker_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "payment_poller_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "payment_poller_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Scheduler started
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Scheduler started
+2026-04-23 12:28:54,042 | INFO     | telegram.ext.Application | Application started
+2026-04-23 12:28:54,042 | INFO     | telegram.ext.Application | Application started
+2026-04-23 12:28:58,508 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:28:58,508 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:28:58,509 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:28:58,509 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:28:58,926 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" (scheduled at 2026-04-23 12:28:58.923756+00:00)
+2026-04-23 12:28:58,926 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" (scheduled at 2026-04-23 12:28:58.923756+00:00)
+2026-04-23 12:28:58,928 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" executed successfully
+2026-04-23 12:28:58,928 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" executed successfully
+2026-04-23 12:29:03,929 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" (scheduled at 2026-04-23 12:29:03.924603+00:00)
+2026-04-23 12:29:03,929 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" (scheduled at 2026-04-23 12:29:03.924603+00:00)
+2026-04-23 12:29:03,932 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" executed successfully
+2026-04-23 12:29:03,932 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" executed successfully
+2026-04-23 12:29:04,254 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:04,254 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:04,256 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:04,256 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:11,241 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:11,241 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:11,241 | ERROR    | telegram.ext.Updater | Error while calling `get_updates` one more time to mark all fetched updates. Suppressing error to ensure graceful shutdown. When polling for updates is restarted, updates may be fetched again. Please adjust timeouts via `ApplicationBuilder` or the parameter `get_updates_request` of `Bot`.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 400, in _get_updates_cleanup
+    await self.bot.get_updates(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:11,241 | ERROR    | telegram.ext.Updater | Error while calling `get_updates` one more time to mark all fetched updates. Suppressing error to ensure graceful shutdown. When polling for updates is restarted, updates may be fetched again. Please adjust timeouts via `ApplicationBuilder` or the parameter `get_updates_request` of `Bot`.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 400, in _get_updates_cleanup
+    await self.bot.get_updates(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:11,242 | INFO     | telegram.ext.Application | Application is stopping. This might take a moment.
+2026-04-23 12:29:11,242 | INFO     | telegram.ext.Application | Application is stopping. This might take a moment.
+2026-04-23 12:29:11,242 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-04-23 12:29:11,242 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-04-23 12:29:11,253 | INFO     | telegram.ext.Application | Application.stop() complete
+2026-04-23 12:29:11,253 | INFO     | telegram.ext.Application | Application.stop() complete

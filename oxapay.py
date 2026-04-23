@@ -1,5 +1,5 @@
 """
-oxapay.py ─ OxaPay Payment Gateway (V1 & Legacy support)
+oxapay.py ─ OxaPay Payment Gateway (Enhanced Cloudflare Bypass + V1/Legacy)
 """
 import aiohttp
 import json
@@ -33,12 +33,21 @@ class OxaPay:
         self.base = "https://api.oxapay.com"
         self.headers = {
             "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            "Accept": "application/json",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Referer": "https://oxapay.com/",
         }
 
     async def _request(self, path: str, data: dict, key_type="merchant") -> dict:
         url = f"{self.base}{path}" if path.startswith("/") else f"{self.base}/{path}"
         headers = dict(self.headers)
+
+        # Ensure we have a key
+        if not self.key:
+            from core import get_setting, OXAPAY_API_KEY
+            db_key = await get_setting("oxapay_key")
+            self.key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
 
         # Determine if V1
         is_v1 = "/v1/" in url or path.startswith("v1/")
@@ -47,11 +56,9 @@ class OxaPay:
 
         # Authentication
         if is_v1:
-            # V1 uses headers
             header_key = "merchant_api_key" if key_type == "merchant" else "general_api_key"
             headers[header_key] = str(self.key)
         else:
-            # Legacy uses body
             payload["merchant"] = str(self.key)
             payload["key"] = str(self.key)
 
@@ -68,12 +75,15 @@ class OxaPay:
             try:
                 async with s.post(url, json=payload, headers=headers, timeout=20) as r:
                     text = await r.text()
-                    log.info(f"OxaPay {path} | Status: {r.status} | Payload: {json.dumps(payload)} | Body: {text[:200]}")
+                    # Log with masked key
+                    masked_key = f"{self.key[:4]}...{self.key[-4:]}" if self.key else "NONE"
+                    log.info(f"OxaPay {path} | Status: {r.status} | Key: {masked_key} | Body: {text[:200]}")
 
-                    if r.status == 403: raise OxaPayError("Cloudflare 403 Blocked")
+                    if r.status == 403:
+                        raise OxaPayError("Cloudflare 403 Blocked. Please check if your server IP is blocked or use a different endpoint.")
 
                     try: resp = json.loads(text)
-                    except: raise OxaPayError(f"Invalid JSON: {text[:50]}")
+                    except: raise OxaPayError(f"Invalid JSON response from API")
 
                     # Success check
                     status = resp.get("status") # V1
@@ -93,25 +103,20 @@ class OxaPay:
                 raise OxaPayError(f"Request failed: {str(e)}")
 
     async def merchant_info(self) -> dict:
-        # Try V1 merchant balance first
         try: return await self._request("/v1/merchant/balance", {})
         except: pass
-        # Try V1 general balance
         try: return await self._request("/v1/general/account/balance", {}, key_type="general")
         except: pass
-        # Legacy fallbacks
         for ep in ["/merchants/balance", "/merchant/balance", "/wlabel/balance"]:
             try: return await self._request(ep, {})
             except: continue
         return {"result": 404, "message": "Balance endpoint not found"}
 
     async def accepted_currencies(self) -> list:
-        # V1
         try:
             resp = await self._request("/v1/merchant/allowed_currencies", {})
             return resp.get("data") or []
         except: pass
-        # Legacy
         for ep in ["/merchants/list/currencies", "/wlabel/list/currencies"]:
             try:
                 resp = await self._request(ep, {})
@@ -120,7 +125,6 @@ class OxaPay:
         return []
 
     async def create_invoice(self, amount: float, pay_currency: str, order_id: str, description: str = "Deposit", lifetime: int = 60, fee_paid_by_payer: int = 0, underpaid_cover: float = 2.5) -> dict:
-        # V1 Payload
         v1_data = {
             "amount": float(amount),
             "currency": "USD",
@@ -136,8 +140,6 @@ class OxaPay:
             return res.get("data") or res
         except Exception as e:
             log.warning(f"V1 Invoice failed ({e}), trying legacy...")
-
-            # Legacy Payload
             leg_data = {
                 "amount": float(amount),
                 "currency": "USD",
