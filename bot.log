@@ -204,3 +204,11 @@ telegram.error.Conflict: Conflict: terminated by other getUpdates request; make 
 2026-04-23 12:29:11,242 | INFO     | apscheduler.scheduler | Scheduler has been shut down
 2026-04-23 12:29:11,253 | INFO     | telegram.ext.Application | Application.stop() complete
 2026-04-23 12:29:11,253 | INFO     | telegram.ext.Application | Application.stop() complete
+Traceback (most recent call last):
+  File "/app/main.py", line 173, in <module>
+    build_app().run_polling(allowed_updates=["message","callback_query","inline_query"], drop_pending_updates=True)
+    ^^^^^^^^^^^
+  File "/app/main.py", line 162, in build_app
+    if not BOT_TOKEN: raise RuntimeError("BOT_TOKEN not set!")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: BOT_TOKEN not set!
