@@ -13,7 +13,7 @@ from telegram.ext import (
 )
 from core import (
     t, fmt_date, user_display, is_admin, get_user_by_id,
-    get_setting, set_setting,
+    get_setting, set_setting, start_cmd,
     get_payment_methods, get_payment_method, add_payment_method,
     update_payment_method, delete_payment_method, toggle_payment_method,
     get_all_payments, get_payment_stats,
@@ -61,10 +61,25 @@ async def adm_pay_menu_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     status_s = ("🟢 مفعّل" if lang=="ar" else "🟢 Active") if enabled \
                else ("🔴 معطّل" if lang=="ar" else "🔴 Disabled")
 
+    # Try to get balance
+    balance_text = ""
+    if key:
+        try:
+            bal_data = await oxapay.merchant_info()
+            if bal_data.get("result") == 100 or bal_data.get("result") == 200:
+                 # result 100 usually success. Body format: {"result":100, "message":"success", "data": {"balance":0, ...}}
+                 # but docs vary. Let's look at Body v13: Body /merchant/balance: 403 (blocked)
+                 # If it works, it usually has "data" or "balance"
+                 bal = bal_data.get("balance", bal_data.get("data", {}).get("balance", "0"))
+                 balance_text = f"\n💰 {'رصيد الحساب:' if lang=='ar' else 'Account Balance:'} <b>${bal}</b>"
+        except:
+            pass
+
     text = (
         f"{'💳 إدارة المدفوعات' if lang=='ar' else '💳 Payment Management'}\n\n"
         f"{'البوابة:' if lang=='ar' else 'Gateway:'} <b>OxaPay</b>  {status_s}\n"
         f"{'المفتاح:' if lang=='ar' else 'Key:'} <code>{'✅ مُعد' if key else '❌ غير مُعد'}</code>"
+        f"{balance_text}"
     )
 
     rows = [
@@ -388,6 +403,7 @@ async def adm_pm_delete_ok_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await q.edit_message_text(t(lang,"adm_pm_deleted"),
                                reply_markup=back_kb(lang,"adm:pm:l"))
 
+async def _pm_conv_end(u, c): return END
 
 # ── ADD PAYMENT METHOD WIZARD ─────────────────────────────────────────────────
 
@@ -398,7 +414,9 @@ async def adm_pm_add_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     if not ok: return
 
     # Fetch available currencies from OxaPay
-    key = await get_setting("oxapay_key") or ""
+    from core import OXAPAY_API_KEY
+    db_key = await get_setting("oxapay_key")
+    key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
     if key: init_oxapay(key)
 
     await q.edit_message_text(t(lang,"loading"), parse_mode="HTML")
@@ -567,7 +585,9 @@ def register(app):
             ],
         },
         fallbacks=[
-            CallbackQueryHandler(lambda u,c: END, pattern="^adm:pm:l$"),
+            CallbackQueryHandler(_pm_conv_end, pattern="^adm:pm:l$"),
+            CommandHandler("start", start_cmd),
+            MessageHandler(filters.COMMAND, _pm_conv_end),
         ],
         per_message=False, allow_reentry=True,
     )

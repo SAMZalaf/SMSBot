@@ -14,6 +14,7 @@ from telegram.ext import (
 from core import (
     t, fmt_date, fmt_list, tx_name, tx_icon, user_display, status_label,
     get_user, get_user_by_id, update_user, update_balance, get_setting, set_setting,
+    start_cmd,
     get_all_settings, get_all_users, count_users, search_users, get_top_users,
     get_user_purchases, get_user_transactions, get_user_detailed_stats,
     get_all_purchases, get_all_transactions, count_all_purchases,
@@ -21,6 +22,7 @@ from core import (
     get_referral_code, get_user_referrals, count_user_referrals,
     get_user_referral_stats, get_global_referral_stats, get_all_referral_earnings,
     admin_menu_kb, admin_user_kb, admin_settings_kb, admin_referral_kb,
+    admin_group_users_kb, admin_group_money_kb, admin_group_stats_kb, admin_group_msg_kb,
     admin_topsort_kb, admin_profit_kb, back_kb, confirm_action_kb,
     get_profit_stats,
     ADMIN_PASSWORD, SUPER_ADMIN_IDS, ITEMS_PER_PAGE
@@ -69,7 +71,10 @@ async def admin_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 async def recv_pw(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     lang = await _lang(update.effective_user.id)
-    pw   = (update.message.text or "").strip()
+    text = (update.message.text or "").strip()
+    if text == "/start":
+        return await start_cmd(update, ctx)
+    pw = text
     try: await update.message.delete()
     except: pass
     if pw == ADMIN_PASSWORD:
@@ -94,6 +99,50 @@ async def admin_logout_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     lang = await _lang(q.from_user.id)
     await remove_admin_session(q.from_user.id)
     await q.edit_message_text(t(lang,"adm_logged_out"))
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# ADMIN GROUP MENUS
+# ════════════════════════════════════════════════════════════════════════════
+
+async def admin_group_users_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "👥 " + ("إدارة المستخدمين" if lang=="ar" else "User Management"),
+        reply_markup=admin_group_users_kb(lang)
+    )
+
+async def admin_group_money_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "💰 " + ("المدفوعات والأموال" if lang=="ar" else "Payments & Money"),
+        reply_markup=admin_group_money_kb(lang)
+    )
+
+async def admin_group_stats_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "📊 " + ("الإحصائيات" if lang=="ar" else "Statistics"),
+        reply_markup=admin_group_stats_kb(lang)
+    )
+
+async def admin_group_msg_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang, ok = await _require_admin(update, ctx)
+    if not ok: return
+    await q.edit_message_text(
+        "📢 " + ("البث والمراسلة" if lang=="ar" else "Broadcast & Messaging"),
+        reply_markup=admin_group_msg_kb(lang)
+    )
+
+async def end_conv(update, context):
+    return END
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -281,7 +330,7 @@ async def recv_reason(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         tx_amt = -amt; tx_t = "admin_remove"; msg_key = "adm_bal_removed"
 
     new_bal = await update_balance(tid, tx_amt, tx_t, reason,
-                                    admin_actor=update.effective_user.id)
+                                    actor=update.effective_user.id)
     if new_bal is False:
         await update.message.reply_text(t(lang,"adm_bal_err"),
                                          reply_markup=back_kb(lang,f"adm:u:{uid}"))
@@ -329,9 +378,22 @@ async def admin_unban_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     uid  = int(q.data.split(":")[-1])
     user = await get_user_by_id(uid)
     if not user: await q.answer(t(lang,"adm_not_found"),show_alert=True); return
-    await update_user(user["telegram_id"], is_banned=0)
+    tid  = user["telegram_id"]
+    await update_user(tid, is_banned=0)
+
+    # Clear anti-spam ban
+    from core import DATABASE_PATH
+    import aiosqlite
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        await db.execute("UPDATE user_antispam SET banned_until=NULL, spam_count=0, ban_count=0 WHERE telegram_id=?", (tid,))
+        await db.commit()
+
+    # Clear cache
+    from main import SPAM_CACHE
+    SPAM_CACHE.pop(tid, None)
+
     try:
-        await ctx.bot.send_message(user["telegram_id"],
+        await ctx.bot.send_message(tid,
             t(user.get("language","ar"), "notify_unbanned"), parse_mode="HTML")
     except: pass
     await q.edit_message_text(t(lang,"adm_unban_ok",user=user_display(user)),
@@ -444,7 +506,7 @@ async def admin_user_purchases_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE
     for p in ps:
         si = ICONS.get(p.get("status",""),"❓")
         lines.append(f"📞 <code>{p.get('phone_number','—')}</code>  |  📲 {p.get('service_name','—')}  |  🌍 {p.get('country_name','—')}\n"
-                     f"💰 ${p.get('cost_display',0):.4f}  {si} {p.get('status','').title()}  |  📅 {fmt_date(p.get('created_at',''))}\n"
+                     f"💰 ${p.get('cost_display',0):.2f}  {si} {p.get('status','').title()}  |  📅 {fmt_date(p.get('created_at',''))}\n"
                      f"🆔 <code>{p.get('order_id','')}</code>")
         lines.append("")
     nav = []
@@ -470,9 +532,9 @@ async def admin_user_txs_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     lines = [f"💳 <b>{user_display(user)}</b>\n"]
     for tx in txs:
         tp = tx.get("type","")
-        lines.append(f"{tx_icon(tp)} {tx_name('en',tp)}  <b>{tx.get('amount',0):+.4f}$</b>\n"
+        lines.append(f"{tx_icon(tp)} {tx_name('en',tp)}  <b>{tx.get('amount',0):+.2f}$</b>\n"
                      f"📝 {tx.get('description','—')}\n"
-                     f"💳 ${tx.get('balance_after',0):.4f}  |  📅 {fmt_date(tx.get('created_at',''))}")
+                     f"💳 ${tx.get('balance_after',0):.2f}  |  📅 {fmt_date(tx.get('created_at',''))}")
         lines.append("")
     nav = []
     if page > 0: nav.append(Btn(t(lang,"prev"), callback_data=f"adm:ut:{uid}:{page-1}"))
@@ -499,7 +561,7 @@ async def admin_user_stats_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         months_lines.append(f"  📅 {m['mo']}: {m['n']} × ${m['tot']:.2f}")
     text = (
         f"📊 <b>{user_display(user)}</b>\n\n"
-        f"💰 Balance: <b>${user['balance']:.4f}</b>  |  Spent: <b>${user['total_spent']:.4f}</b>\n"
+        f"💰 Balance: <b>${user['balance']:.2f}</b>  |  Spent: <b>${user['total_spent']:.2f}</b>\n"
         f"🛒 Total: <b>{user['total_purchases']}</b>  |  ✅ Done: <b>{by_s.get('completed',{}).get('count',0)}</b>\n"
         f"❌ Cancelled: <b>{by_s.get('cancelled',{}).get('count',0)}</b>  |  💸 Refunds: <b>{user['total_refunds']}</b>\n\n"
         f"📱 Top Services:\n{svcs}\n\n🌍 Top Countries:\n{cnts}\n\n"
@@ -525,7 +587,7 @@ async def admin_all_txs_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     for tx in txs:
         tp    = tx.get("type","")
         uname = tx.get("username") or tx.get("first_name") or str(tx.get("telegram_id","?"))
-        lines.append(f"{tx_icon(tp)} <b>{uname}</b>  {tx_name('en',tp)}  <b>{tx.get('amount',0):+.4f}$</b>\n"
+        lines.append(f"{tx_icon(tp)} <b>{uname}</b>  {tx_name('en',tp)}  <b>{tx.get('amount',0):+.2f}$</b>\n"
                      f"📝 {tx.get('description','—')}  |  📅 {fmt_date(tx.get('created_at',''))}")
         lines.append("")
     nav = []
@@ -552,7 +614,7 @@ async def admin_all_purchases_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE)
         un  = p.get("username") or p.get("first_name") or str(p.get("telegram_id","?"))
         lines.append(f"👤 <b>{un}</b>  📞 <code>{p.get('phone_number','—')}</code>\n"
                      f"📲 {p.get('service_name','—')}  🌍 {p.get('country_name','—')}\n"
-                     f"💰 ${p.get('cost_display',0):.4f}  {si}  📅 {fmt_date(p.get('created_at',''))}")
+                     f"💰 ${p.get('cost_display',0):.2f}  {si}  📅 {fmt_date(p.get('created_at',''))}")
         lines.append("")
     nav = []
     if page > 0: nav.append(Btn(t(lang,"prev"), callback_data=f"adm:ap:{page-1}"))
@@ -696,7 +758,7 @@ async def recv_setting_val(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     # Show confirmation with extra info for markup
     if key == "price_markup":
         pct   = float(val)
-        extra = f"\n\n📈 {'مثال' if lang=='ar' else 'Example'}: $1.00 → ${1*(1+pct/100):.4f}"
+        extra = f"\n\n📈 {'مثال' if lang=='ar' else 'Example'}: $1.00 → ${1*(1+pct/100):.2f}"
         await update.message.reply_text(
             t(lang,"adm_setting_saved") + extra,
             parse_mode="HTML",
@@ -865,12 +927,27 @@ async def admin_profit_markup_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE)
 
 async def _full_user_text(lang, u):
     """Build rich user profile text with all stats."""
-    from core import get_user_detailed_stats, get_user_referral_stats, _q
+    from core import get_user_detailed_stats, get_user_referral_stats, _q, DATABASE_PATH
+    import aiosqlite
     uid   = u["id"]
-    stats = await get_user_detailed_stats(u["telegram_id"])
-    refs  = await get_user_referral_stats(u["telegram_id"])
+    tid   = u["telegram_id"]
+    stats = await get_user_detailed_stats(tid)
+    refs  = await get_user_referral_stats(tid)
     by_s  = stats["by_status"] if stats else {}
     done  = by_s.get("completed",{}).get("count",0)
+
+    # Check anti-spam status
+    spam_status = "❌"
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cur = await db.execute("SELECT banned_until FROM user_antispam WHERE telegram_id=?", (tid,))
+        row = await cur.fetchone()
+        if row and row["banned_until"]:
+            from datetime import datetime
+            bu = datetime.fromisoformat(row["banned_until"])
+            if datetime.now() < bu:
+                spam_status = f"✅ ({fmt_date(row['banned_until'])})"
+
     return t(lang,"adm_user_full",
         tid=u["telegram_id"],
         name=user_display(u), uname=_uname(u),
@@ -881,6 +958,7 @@ async def _full_user_text(lang, u):
         joined=fmt_date(u.get("created_at","")),
         active=fmt_date(u.get("last_active","")),
         banned="✅" if u.get("is_banned") else "❌",
+        spam_status=spam_status,
         note=u.get("note") or "—"
     )
 
@@ -1133,7 +1211,7 @@ async def admin_user_referrals_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE
     stats = await get_user_referral_stats(user["telegram_id"])
     lines.append("─" * 18)
     lines.append(f"📊 {'الإجمالي' if lang=='ar' else 'Total'}: {stats.get('total',0)} | "
-                 f"💰 ${stats.get('total_earned',0):.4f} | "
+                 f"💰 ${stats.get('total_earned',0):.2f} | "
                  f"{'النسبة' if lang=='ar' else 'Rate'}: {stats.get('pct',5)}%")
 
     nav = []
@@ -1173,7 +1251,7 @@ def register(app):
             S_REF_PCT:    [MessageHandler(filters.TEXT & ~filters.COMMAND, recv_ref_pct)],
             S_USEARCH2:   [MessageHandler(filters.TEXT & ~filters.COMMAND, recv_usearch2)],
         },
-        fallbacks=[CommandHandler("start", lambda u,c: END)],
+        fallbacks=[CommandHandler("start", start_cmd), MessageHandler(filters.COMMAND, end_conv)],
         per_message=False, allow_reentry=True,
     )
     app.add_handler(conv)
@@ -1182,7 +1260,8 @@ def register(app):
     app.add_handler(ConversationHandler(
         entry_points=[CommandHandler("admin", admin_cmd)],
         states={S_PW: [MessageHandler(filters.TEXT & ~filters.COMMAND, recv_pw)]},
-        fallbacks=[], per_message=False, allow_reentry=True,
+        fallbacks=[CommandHandler("start", start_cmd)],
+        per_message=False, allow_reentry=True,
     ), group=1)
 
     # Regular callbacks
@@ -1217,5 +1296,9 @@ def register(app):
         ("^adm:profit:monthly$",        admin_profit_monthly_cb),
         ("^adm:profit:deposits$",       admin_profit_deposits_cb),
         ("^adm:profit:markup$",         admin_profit_markup_cb),
+        ("^adm:grp:users$",             admin_group_users_cb),
+        ("^adm:grp:money$",             admin_group_money_cb),
+        ("^adm:grp:stats$",             admin_group_stats_cb),
+        ("^adm:grp:msg$",               admin_group_msg_cb),
     ]:
         app.add_handler(CallbackQueryHandler(handler, pattern=pattern))

@@ -38,21 +38,27 @@ class SMSPool:
     # ── Account ───────────────────────────────────────────────────────────────
 
     async def account_balance(self) -> float:
-        r = await self._post("/account/balance")
+        r = await self._post("/request/balance")
         return float(r.get("balance", 0))
 
     # ── Countries ─────────────────────────────────────────────────────────────
 
     async def countries(self) -> list:
-        data = await self._get("/country/list")
+        data = await self._get("/country/retrieve_all")
         return data if isinstance(data, list) else []
 
     # ── Services ──────────────────────────────────────────────────────────────
 
     async def services(self, country=None) -> list:
         p = {"country": country} if country else {}
-        data = await self._get("/service/list", p)
-        return data if isinstance(data, list) else []
+        # Try new endpoint first
+        try:
+            data = await self._get("/service/retrieve_all", p)
+            return data if isinstance(data, list) else []
+        except:
+            # Fallback to old one just in case
+            data = await self._get("/service/list", p)
+            return data if isinstance(data, list) else []
 
     # ── Purchase ──────────────────────────────────────────────────────────────
 

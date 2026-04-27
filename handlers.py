@@ -72,6 +72,12 @@ async def _send_or_edit(update, text, kb=None, parse_mode="HTML"):
 # ════════════════════════════════════════════════════════════════════════════
 
 async def start_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    # Cancel any active conversation states
+    if ctx.user_data:
+        for key in list(ctx.user_data.keys()):
+            if not key.startswith("_"): # Convention: persistent data starts with _
+                ctx.user_data.pop(key)
+
     user = await _ensure_user(update)
     if await _check_banned(user, update): return
     lang  = user.get("language", "ar")
@@ -109,6 +115,9 @@ async def start_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     text = custom_welcome if custom_welcome else t(lang, "welcome", name=name, bal=bal)
     await _send_or_edit(update, text, main_menu_kb(lang, adm))
 
+    from telegram.ext import ConversationHandler
+    return ConversationHandler.END
+
 
 async def get_user_by_referral_code_safe(code: str):
     """Wrapper to find user by referral code."""
@@ -143,10 +152,22 @@ async def lang_set_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 # BUY FLOW
 # ════════════════════════════════════════════════════════════════════════════
 
+async def buy_cat_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query; await q.answer()
+    lang = await _lang(q.from_user.id)
+    from core import buy_categories_kb
+    await q.edit_message_text(t(lang, "buy_select_category"),
+                               parse_mode="HTML", reply_markup=buy_categories_kb(lang))
+
 async def buy_start_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     q    = update.callback_query
     await q.answer()
     lang = await _lang(q.from_user.id)
+
+    parts = q.data.split(":")
+    pool_id = parts[2] if len(parts) > 2 else "0"
+    ctx.user_data["buy_pool"] = pool_id
+
     await q.edit_message_text(t(lang, "loading"), parse_mode="HTML")
     try:
         countries = await pool.countries()
@@ -185,8 +206,13 @@ async def buy_country_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await q.edit_message_text(t(lang, "buy_no_services")); return
     ctx.application.bot_data[f"svc_{cid}"] = services
     ctx.application.bot_data[f"svc_map_{cid}"] = {str(s.get("ID",s.get("id",""))): s for s in services}
+
+    markup_raw = await get_setting("price_markup") or "0"
+    try: markup_pct = float(markup_raw)
+    except: markup_pct = 0.0
+
     await q.edit_message_text(t(lang, "buy_select_service", country=cnt_name), parse_mode="HTML",
-                               reply_markup=services_kb(lang, services, cid, 0))
+                               reply_markup=services_kb(lang, services, cid, 0, markup_pct=markup_pct))
 
 async def buy_services_page_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     q    = update.callback_query
@@ -197,8 +223,13 @@ async def buy_services_page_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     services = ctx.application.bot_data.get(f"svc_{cid}", [])
     if not services:
         await buy_country_cb(update, ctx); return
+
+    markup_raw = await get_setting("price_markup") or "0"
+    try: markup_pct = float(markup_raw)
+    except: markup_pct = 0.0
+
     await q.edit_message_text(t(lang, "buy_select_service", country=cnt_name), parse_mode="HTML",
-                               reply_markup=services_kb(lang, services, cid, int(page)))
+                               reply_markup=services_kb(lang, services, cid, int(page), markup_pct=markup_pct))
 
 async def buy_service_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     """b:sv:{cid}:{sid} → show confirm"""
@@ -243,8 +274,9 @@ async def buy_confirm_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
                                    reply_markup=back_kb(lang,"bl:m")); return
 
     await q.edit_message_text(t(lang,"loading"), parse_mode="HTML")
+    pool_id = ctx.user_data.get("buy_pool", "0")
     try:
-        res = await pool.purchase(country=cid, service=sid)
+        res = await pool.purchase(country=cid, service=sid, pool=pool_id)
     except SMSError as e:
         await q.edit_message_text(t(lang,"buy_failed",reason=str(e)),reply_markup=back_kb(lang,"mm")); return
 
@@ -974,14 +1006,14 @@ async def referral_stats_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     top_lines = []
     for i, r in enumerate(stats.get("top_refs",[]), 1):
         name = r.get("first_name","") or r.get("username","") or "?"
-        top_lines.append(f"  {i}. <b>{name}</b> — {r.get('purchases',0)} × ${r.get('earned',0):.4f}")
+        top_lines.append(f"  {i}. <b>{name}</b> — {r.get('purchases',0)} × ${r.get('earned',0):.2f}")
 
     text = (
         f"{t(lang,'ref_stats_title')}\n\n"
         f"{'👥 الكل' if lang=='ar' else '👥 Total'}: <b>{stats.get('total',0)}</b>\n"
         f"{'✅ اشتروا' if lang=='ar' else '✅ Active buyers'}: <b>{stats.get('active',0)}</b>\n\n"
-        f"{'💰 الإجمالي' if lang=='ar' else '💰 Total earned'}: <b>${stats.get('total_earned',0):.4f}</b>\n"
-        f"{'📅 هذا الشهر' if lang=='ar' else '📅 This month'}: <b>${stats.get('month_earned',0):.4f}</b>\n"
+        f"{'💰 الإجمالي' if lang=='ar' else '💰 Total earned'}: <b>${stats.get('total_earned',0):.2f}</b>\n"
+        f"{'📅 هذا الشهر' if lang=='ar' else '📅 This month'}: <b>${stats.get('month_earned',0):.2f}</b>\n"
         f"{'📈 النسبة' if lang=='ar' else '📈 Rate'}: <b>{stats.get('pct',5)}%</b>\n\n"
         f"{'🏆 الأفضل' if lang=='ar' else '🏆 Top referrals'}:\n" +
         ("\n".join(top_lines) or "—")
@@ -1061,7 +1093,8 @@ def register(app):
     cb(CallbackQueryHandler(lang_choose_cb,             pattern="^lc$"))
     cb(CallbackQueryHandler(lang_set_cb,                pattern=r"^l:(ar|en)$"))
 
-    cb(CallbackQueryHandler(buy_start_cb,               pattern="^b:s$"))
+    cb(CallbackQueryHandler(buy_cat_cb,                 pattern="^b:cat$"))
+    cb(CallbackQueryHandler(buy_start_cb,               pattern=r"^b:s(:\d+)?$"))
     cb(CallbackQueryHandler(buy_countries_page_cb,      pattern=r"^b:cp:\d+$"))
     cb(CallbackQueryHandler(buy_country_cb,             pattern=r"^b:c:\w+$"))
     cb(CallbackQueryHandler(buy_services_page_cb,       pattern=r"^b:sp:\w+:\d+$"))

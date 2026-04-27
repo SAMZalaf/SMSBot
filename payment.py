@@ -12,7 +12,7 @@ from telegram.ext import (
     ConversationHandler, MessageHandler, filters, CommandHandler
 )
 from core import (
-    t, fmt_date, get_user, update_balance,
+    t, fmt_date, get_user, update_balance, start_cmd,
     get_payment_methods, get_payment_method,
     create_payment, get_payment_by_track, update_payment,
     get_user_payments, get_setting, is_admin,
@@ -36,6 +36,12 @@ async def _lang(tid):
 # ════════════════════════════════════════════════════════════════════════════
 
 async def pay_menu_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    # Cancel any active conversation states
+    if ctx.user_data:
+        for key in list(ctx.user_data.keys()):
+            if not key.startswith("_"):
+                ctx.user_data.pop(key)
+
     q = update.callback_query
     await q.answer()
     lang = await _lang(q.from_user.id)
@@ -112,6 +118,9 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     coin    = ctx.user_data.get("pay_coin", "USDT")
     network = ctx.user_data.get("pay_network","")
+
+    pay_currency_combined = f"{coin}/{network}" if network else coin
+
     fee     = ctx.user_data.get("pay_fee", 0)
     life    = ctx.user_data.get("pay_life", 30)
     under   = ctx.user_data.get("pay_under", 2.5)
@@ -119,20 +128,22 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     loading = await update.message.reply_text(t(lang, "pay_creating"))
 
     # Reload oxapay with current key from settings
-    key = await get_setting("oxapay_key") or ""
+    from core import OXAPAY_API_KEY
+    db_key = await get_setting("oxapay_key")
+    key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
     if key:
         init_oxapay(key)
 
     order_ref = f"dep_{update.effective_user.id}_{uuid.uuid4().hex[:8]}"
     try:
         res = await oxapay.create_invoice(
-            amount=amount,
-            pay_currency=coin,
+            amount=float(amount),
+            pay_currency=pay_currency_combined,
             order_id=order_ref,
             description=f"Deposit {amount} USD",
-            lifetime=life,
-            fee_paid_by_payer=fee,
-            underpaid_cover=under,
+            lifetime=int(life),
+            fee_paid_by_payer=int(fee),
+            underpaid_cover=float(under),
         )
     except OxaPayError as e:
         await loading.edit_text(t(lang, "pay_error", reason=str(e)))
@@ -312,66 +323,60 @@ async def _confirm_payment(track_id, payment, lang, tid, bot):
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# BACKGROUND PAYMENT POLLER (called from main.py)
+# BACKGROUND PAYMENT POLLER STEP (called by JobQueue)
 # ════════════════════════════════════════════════════════════════════════════
 
-async def payment_poller(app):
-    """Background task: polls pending payments every 30 seconds."""
-    import logging
-    log = logging.getLogger("payment_poller")
-    log.info("Payment poller started ✓")
+async def payment_poller_step(bot):
+    """Execution step for polling pending payments."""
+    try:
+        from core import get_pending_payments
+        payments = await get_pending_payments()
+        if not payments:
+            return
 
-    while True:
-        await asyncio.sleep(30)
-        try:
-            from core import get_pending_payments, PAY_CHECK_INTERVAL
-            payments = await get_pending_payments()
-            if not payments:
+        key = await get_setting("oxapay_key") or ""
+        if not key:
+            return
+        init_oxapay(key)
+
+        for p in payments:
+            track_id = p.get("track_id")
+            tid      = p.get("tg_id")
+            lang     = p.get("user_lang","ar")
+            if not track_id:
                 continue
 
-            key = await get_setting("oxapay_key") or ""
-            if not key:
-                continue
-            init_oxapay(key)
-
-            for p in payments:
-                track_id = p.get("track_id")
-                tid      = p.get("tg_id")
-                lang     = p.get("user_lang","ar")
-                if not track_id:
-                    continue
-
-                # Check if expired_at has passed
-                expired_at = p.get("expired_at")
-                if expired_at:
-                    try:
-                        if datetime.now() > datetime.fromisoformat(expired_at):
-                            await update_payment(track_id, status="Expired")
-                            continue
-                    except Exception:
-                        pass
-
+            # Check if expired_at has passed
+            expired_at = p.get("expired_at")
+            if expired_at:
                 try:
-                    res = await oxapay.check_payment(track_id)
-                except OxaPayError:
-                    continue
+                    if datetime.now() > datetime.fromisoformat(expired_at):
+                        await update_payment(track_id, status="Expired")
+                        continue
+                except Exception:
+                    pass
 
-                status = res.get("status", "Waiting")
-                await update_payment(
-                    track_id,
-                    status=status,
-                    received_amount=res.get("receivedAmount"),
-                    raw_response=str(res)
-                )
+            try:
+                res = await oxapay.check_payment(track_id)
+            except OxaPayError:
+                continue
 
-                if status == "Paid":
-                    await _confirm_payment(track_id, p, lang, tid, app.bot)
-                elif status in ("Expired", "Error", "Canceled"):
-                    await update_payment(track_id, status=status)
+            status = res.get("status", "Waiting")
+            await update_payment(
+                track_id,
+                status=status,
+                received_amount=res.get("receivedAmount"),
+                raw_response=str(res)
+            )
 
-        except Exception as e:
-            import logging
-            logging.getLogger("payment_poller").error(f"Poller error: {e}")
+            if status == "Paid":
+                await _confirm_payment(track_id, p, lang, tid, bot)
+            elif status in ("Expired", "Error", "Canceled"):
+                await update_payment(track_id, status=status)
+
+    except Exception as e:
+        import logging
+        logging.getLogger("payment_poller").error(f"Poller error: {e}")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -386,7 +391,7 @@ def register(app):
         states={
             S_AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, pay_recv_amount)],
         },
-        fallbacks=[CommandHandler("start", lambda u,c: END)],
+        fallbacks=[CommandHandler("start", start_cmd)],
         per_message=False, allow_reentry=True,
     )
     app.add_handler(conv)
