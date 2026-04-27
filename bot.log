@@ -1,0 +1,214 @@
+2026-04-23 12:28:53,868 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
+2026-04-23 12:28:53,868 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getMe "HTTP/1.1 200 OK"
+2026-04-23 12:28:53,870 | INFO     | __main__ | Initialising database...
+2026-04-23 12:28:53,870 | INFO     | __main__ | Initialising database...
+2026-04-23 12:28:53,922 | INFO     | __main__ | Initialising OxaPay with key: YLFY1E...1CMB
+2026-04-23 12:28:53,922 | INFO     | __main__ | Initialising OxaPay with key: YLFY1E...1CMB
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-23 12:28:53,924 | INFO     | __main__ | Background jobs started via JobQueue
+2026-04-23 12:28:53,924 | INFO     | __main__ | Background jobs started via JobQueue
+2026-04-23 12:28:54,039 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
+2026-04-23 12:28:54,039 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/deleteWebhook "HTTP/1.1 200 OK"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "sms_checker_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "sms_checker_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "payment_poller_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Added job "payment_poller_job" to job store "default"
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Scheduler started
+2026-04-23 12:28:54,042 | INFO     | apscheduler.scheduler | Scheduler started
+2026-04-23 12:28:54,042 | INFO     | telegram.ext.Application | Application started
+2026-04-23 12:28:54,042 | INFO     | telegram.ext.Application | Application started
+2026-04-23 12:28:58,508 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:28:58,508 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:28:58,509 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:28:58,509 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:28:58,926 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" (scheduled at 2026-04-23 12:28:58.923756+00:00)
+2026-04-23 12:28:58,926 | INFO     | apscheduler.executors.default | Running job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" (scheduled at 2026-04-23 12:28:58.923756+00:00)
+2026-04-23 12:28:58,928 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" executed successfully
+2026-04-23 12:28:58,928 | INFO     | apscheduler.executors.default | Job "sms_checker_job (trigger: interval[0:00:15], next run at: 2026-04-23 12:29:13 UTC)" executed successfully
+2026-04-23 12:29:03,929 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" (scheduled at 2026-04-23 12:29:03.924603+00:00)
+2026-04-23 12:29:03,929 | INFO     | apscheduler.executors.default | Running job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" (scheduled at 2026-04-23 12:29:03.924603+00:00)
+2026-04-23 12:29:03,932 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" executed successfully
+2026-04-23 12:29:03,932 | INFO     | apscheduler.executors.default | Job "payment_poller_job (trigger: interval[0:00:30], next run at: 2026-04-23 12:29:33 UTC)" executed successfully
+2026-04-23 12:29:04,254 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:04,254 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:04,256 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:04,256 | ERROR    | telegram.ext.Application | No error handlers are registered, logging exception.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 161, in network_retry_loop
+    await do_action()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_utils/networkloop.py", line 154, in do_action
+    action_cb_task.result()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 340, in polling_action_cb
+    updates = await self.bot.get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:11,241 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:11,241 | INFO     | httpx | HTTP Request: POST https://api.telegram.org/bot7751227560:AAFovxVRR7dA1x7cqsJ3wsc4MPhttU4UeJU/getUpdates "HTTP/1.1 409 Conflict"
+2026-04-23 12:29:11,241 | ERROR    | telegram.ext.Updater | Error while calling `get_updates` one more time to mark all fetched updates. Suppressing error to ensure graceful shutdown. When polling for updates is restarted, updates may be fetched again. Please adjust timeouts via `ApplicationBuilder` or the parameter `get_updates_request` of `Bot`.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 400, in _get_updates_cleanup
+    await self.bot.get_updates(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:11,241 | ERROR    | telegram.ext.Updater | Error while calling `get_updates` one more time to mark all fetched updates. Suppressing error to ensure graceful shutdown. When polling for updates is restarted, updates may be fetched again. Please adjust timeouts via `ApplicationBuilder` or the parameter `get_updates_request` of `Bot`.
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_updater.py", line 400, in _get_updates_cleanup
+    await self.bot.get_updates(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 672, in get_updates
+    updates = await super().get_updates(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 4865, in get_updates
+    await self._post(
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 704, in _post
+    return await self._do_post(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/ext/_extbot.py", line 370, in _do_post
+    return await super()._do_post(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/_bot.py", line 733, in _do_post
+    result = await request.post(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 198, in post
+    result = await self._request_wrapper(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/telegram/request/_baserequest.py", line 375, in _request_wrapper
+    raise exception
+telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2026-04-23 12:29:11,242 | INFO     | telegram.ext.Application | Application is stopping. This might take a moment.
+2026-04-23 12:29:11,242 | INFO     | telegram.ext.Application | Application is stopping. This might take a moment.
+2026-04-23 12:29:11,242 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-04-23 12:29:11,242 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-04-23 12:29:11,253 | INFO     | telegram.ext.Application | Application.stop() complete
+2026-04-23 12:29:11,253 | INFO     | telegram.ext.Application | Application.stop() complete
+Traceback (most recent call last):
+  File "/app/main.py", line 173, in <module>
+    build_app().run_polling(allowed_updates=["message","callback_query","inline_query"], drop_pending_updates=True)
+    ^^^^^^^^^^^
+  File "/app/main.py", line 162, in build_app
+    if not BOT_TOKEN: raise RuntimeError("BOT_TOKEN not set!")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: BOT_TOKEN not set!
