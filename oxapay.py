@@ -1,6 +1,11 @@
 """
-oxapay.py ─ OxaPay Payment Gateway (Enhanced Cloudflare Bypass + V1/Legacy)
+oxapay.py ─ OxaPay Payment Gateway
+
+⚠️ إذا ظهر خطأ "Host not in allowlist":
+  1. افتح: https://oxapay.com/dashboard → Settings → Security → IP Whitelist
+  2. أضف IP السيرفر أو عطّل قيد الـ IP كلياً
 """
+import asyncio
 import aiohttp
 import json
 import logging
@@ -25,150 +30,214 @@ COIN_ICONS = {
     "DAI":   "🟡", "ADA":   "🔵", "DOT":  "🔴",
 }
 
-class OxaPayError(Exception): pass
+_IP_MSGS = ("host not in allowlist", "not in allowlist", "ip not allowed")
+
+
+class OxaPayError(Exception):
+    pass
+
+
+class OxaPayIPError(OxaPayError):
+    """IP السيرفر غير مدرج في القائمة البيضاء."""
+    pass
+
 
 class OxaPay:
     def __init__(self, key: str = ""):
-        self.key = key
+        self.key  = key
         self.base = "https://api.oxapay.com"
-        self.headers = {
-            "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-            "Accept": "application/json",
+        self._headers = {
+            "Content-Type":  "application/json",
+            "User-Agent":    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept":        "application/json",
             "Accept-Language": "en-US,en;q=0.9",
-            "Referer": "https://oxapay.com/",
         }
 
-    async def _request(self, path: str, data: dict, key_type="merchant") -> dict:
-        url = f"{self.base}{path}" if path.startswith("/") else f"{self.base}/{path}"
-        headers = dict(self.headers)
+    # ── internal ──────────────────────────────────────────────────────────────
 
-        # Ensure we have a key
+    async def _ensure_key(self):
         if not self.key:
             from core import get_setting, OXAPAY_API_KEY
             db_key = await get_setting("oxapay_key")
             self.key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
 
-        # Determine if V1
-        is_v1 = "/v1/" in url or path.startswith("v1/")
+    def _raise_if_ip_block(self, text: str):
+        tl = text.lower()
+        if any(m in tl for m in _IP_MSGS):
+            raise OxaPayIPError(
+                "🚫 OxaPay: IP السيرفر غير مسموح به.\n\n"
+                "الحل:\n"
+                "oxapay.com → Dashboard → Settings → Security → IP Whitelist\n"
+                "→ أضف IP السيرفر أو عطّل قيود الـ IP"
+            )
 
-        payload = dict(data)
+    async def _request(self, path: str, payload: dict, header_auth: bool = False) -> dict:
+        await self._ensure_key()
+        url  = f"{self.base}{path}"
+        hdrs = dict(self._headers)
+        body = dict(payload)
 
-        # Authentication
-        if is_v1:
-            header_key = "merchant_api_key" if key_type == "merchant" else "general_api_key"
-            headers[header_key] = str(self.key)
+        if header_auth:
+            hdrs["merchant_api_key"] = str(self.key)
         else:
-            payload["merchant"] = str(self.key)
-            payload["key"] = str(self.key)
+            body["merchant"] = str(self.key)
+            body["key"]      = str(self.key)
 
-        # Precise data typing for OxaPay
-        for k in list(payload.keys()):
+        # OxaPay strict typing
+        for k in list(body):
             if k in ("amount", "underPaidCover", "under_paid_coverage"):
-                try: payload[k] = float(payload[k])
+                try: body[k] = float(body[k])
                 except: pass
             elif k in ("lifeTime", "lifetime", "feePaidByPayer", "fee_paid_by_payer"):
-                try: payload[k] = int(payload[k])
+                try: body[k] = int(body[k])
                 except: pass
 
-        async with aiohttp.ClientSession() as s:
+        async with aiohttp.ClientSession() as sess:
             try:
-                async with s.post(url, json=payload, headers=headers, timeout=20) as r:
+                async with sess.post(url, json=body, headers=hdrs, timeout=25) as r:
                     text = await r.text()
-                    # Log with masked key
-                    masked_key = f"{self.key[:4]}...{self.key[-4:]}" if self.key else "NONE"
-                    log.info(f"OxaPay {path} | Status: {r.status} | Key: {masked_key} | Body: {text[:200]}")
+                    log.info(f"OxaPay {path} | {r.status} | {text[:180]}")
 
-                    if r.status == 403:
-                        raise OxaPayError("Cloudflare 403 Blocked. Please check if your server IP is blocked or use a different endpoint.")
+                    self._raise_if_ip_block(text)
 
-                    try: resp = json.loads(text)
-                    except: raise OxaPayError(f"Invalid JSON response from API")
+                    if r.status in (401, 403):
+                        raise OxaPayError(f"Auth error {r.status}: {text[:100]}")
 
-                    # Success check
-                    status = resp.get("status") # V1
-                    result = resp.get("result") # Legacy
+                    try:
+                        resp = json.loads(text)
+                    except:
+                        raise OxaPayError(f"Invalid JSON: {text[:100]}")
 
-                    if status is not None:
-                        if int(status) != 200:
-                            msg = resp.get("error", {}).get("message") or resp.get("message") or "API Error"
-                            raise OxaPayError(f"{msg} (Status {status})")
-                    elif result is not None:
-                        if int(result) not in (100, 200):
-                            raise OxaPayError(f"{resp.get('message', 'Error')} (Result {result})")
+                    # V1 → "status", legacy → "result"
+                    if "status" in resp:
+                        if int(resp["status"]) != 200:
+                            msg = resp.get("error", {}).get("message") or resp.get("message", "API Error")
+                            raise OxaPayError(f"{msg} (status={resp['status']})")
+                    elif "result" in resp:
+                        if int(resp["result"]) not in (100, 200):
+                            raise OxaPayError(f"{resp.get('message','Error')} (result={resp['result']})")
 
                     return resp
+
+            except OxaPayError:
+                raise
             except Exception as e:
-                if isinstance(e, OxaPayError): raise
-                raise OxaPayError(f"Request failed: {str(e)}")
+                raise OxaPayError(f"Connection error: {e}")
+
+    # ── public methods ────────────────────────────────────────────────────────
 
     async def merchant_info(self) -> dict:
-        try: return await self._request("/v1/merchant/balance", {})
-        except: pass
-        try: return await self._request("/v1/general/account/balance", {}, key_type="general")
-        except: pass
-        for ep in ["/merchants/balance", "/merchant/balance", "/wlabel/balance"]:
-            try: return await self._request(ep, {})
-            except: continue
+        try:
+            return await self._request("/v1/merchant/balance", {}, header_auth=True)
+        except OxaPayIPError:
+            raise
+        except OxaPayError:
+            pass
+        for ep in ("/merchants/balance", "/merchant/balance"):
+            try:
+                return await self._request(ep, {})
+            except OxaPayIPError:
+                raise
+            except OxaPayError:
+                continue
         return {"result": 404, "message": "Balance endpoint not found"}
 
     async def accepted_currencies(self) -> list:
         try:
-            resp = await self._request("/v1/merchant/allowed_currencies", {})
-            return resp.get("data") or []
-        except: pass
-        for ep in ["/merchants/list/currencies", "/wlabel/list/currencies"]:
+            r = await self._request("/v1/merchant/allowed_currencies", {}, header_auth=True)
+            return r.get("data") or []
+        except OxaPayIPError:
+            raise
+        except OxaPayError:
+            pass
+        for ep in ("/merchants/list/currencies", "/wlabel/list/currencies"):
             try:
-                resp = await self._request(ep, {})
-                return resp.get("data") or resp.get("result_data") or []
-            except: continue
+                r = await self._request(ep, {})
+                return r.get("data") or r.get("result_data") or []
+            except OxaPayIPError:
+                raise
+            except OxaPayError:
+                continue
         return []
 
-    async def create_invoice(self, amount: float, pay_currency: str, order_id: str, description: str = "Deposit", lifetime: int = 60, fee_paid_by_payer: int = 0, underpaid_cover: float = 2.5) -> dict:
-        v1_data = {
-            "amount": float(amount),
-            "currency": "USD",
-            "lifetime": int(lifetime),
-            "fee_paid_by_payer": int(fee_paid_by_payer),
-            "under_paid_coverage": float(underpaid_cover),
-            "description": description,
-            "order_id": order_id
+    async def create_invoice(
+        self,
+        amount: float,
+        pay_currency: str,
+        order_id: str,
+        description: str = "Deposit",
+        lifetime: int = 60,
+        fee_paid_by_payer: int = 0,
+        underpaid_cover: float = 2.5,
+    ) -> dict:
+        # Try V1
+        try:
+            r = await self._request("/v1/payment/invoice", {
+                "amount":               float(amount),
+                "currency":             "USD",
+                "lifetime":             int(lifetime),
+                "fee_paid_by_payer":    int(fee_paid_by_payer),
+                "under_paid_coverage":  float(underpaid_cover),
+                "description":          description,
+                "order_id":             order_id,
+            }, header_auth=True)
+            return r.get("data") or r
+        except OxaPayIPError:
+            raise
+        except OxaPayError as e:
+            log.warning(f"V1 invoice failed ({e}), trying legacy…")
+
+        # Legacy fallback
+        coin, _, network = pay_currency.partition("/")
+        leg = {
+            "amount":           float(amount),
+            "currency":         "USD",
+            "lifeTime":         int(lifetime),
+            "feePaidByPayer":   int(fee_paid_by_payer),
+            "underPaidCover":   float(underpaid_cover),
+            "description":      description,
+            "orderId":          order_id,
+            "payCurrency":      coin,
         }
+        if network:
+            leg["network"] = network.lower()
 
         try:
-            res = await self._request("/v1/payment/invoice", v1_data)
-            return res.get("data") or res
-        except Exception as e:
-            log.warning(f"V1 Invoice failed ({e}), trying legacy...")
-            leg_data = {
-                "amount": float(amount),
-                "currency": "USD",
-                "lifeTime": int(lifetime),
-                "feePaidByPayer": int(fee_paid_by_payer),
-                "underPaidCover": float(underpaid_cover),
-                "description": description,
-                "orderId": order_id
-            }
-            curr = pay_currency.split("/")[0] if "/" in pay_currency else pay_currency
-            leg_data["payCurrency"] = curr
-            if "/" in pay_currency:
-                leg_data["network"] = pay_currency.split("/")[1].lower()
-
+            return await self._request("/merchants/request", leg)
+        except OxaPayIPError:
+            raise
+        except OxaPayError:
             try:
-                return await self._request("/merchants/request", leg_data)
-            except OxaPayError as e2:
-                if "102" in str(e2) or "merchant" in str(e2).lower():
-                    return await self._request("/wlabel/create", leg_data)
-                raise e2
+                return await self._request("/wlabel/create", leg)
+            except OxaPayIPError:
+                raise
+            except OxaPayError as final:
+                raise final
 
     async def check_payment(self, track_id: str) -> dict:
-        try: return await self._request("/v1/payment/inquiry", {"track_id": track_id})
-        except: return await self._request("/merchants/inquiry", {"trackId": track_id})
+        try:
+            return await self._request(
+                "/v1/payment/inquiry", {"track_id": track_id}, header_auth=True
+            )
+        except OxaPayIPError:
+            raise
+        except OxaPayError:
+            return await self._request("/merchants/inquiry", {"trackId": track_id})
 
-    def status_icon(self, status: str) -> str: return PAYMENT_STATUS.get(status, ("❓", ""))[0]
-    def coin_icon(self, coin: str) -> str: return COIN_ICONS.get(coin.upper(), "🪙")
-    def format_pay_link(self, track_id: str) -> str: return f"https://oxapay.com/pay/{track_id}"
+    # ── utils ─────────────────────────────────────────────────────────────────
+
+    def status_icon(self, status: str) -> str:
+        return PAYMENT_STATUS.get(status, ("❓", ""))[0]
+
+    def coin_icon(self, coin: str) -> str:
+        return COIN_ICONS.get(coin.upper(), "🪙")
+
+    def format_pay_link(self, track_id: str) -> str:
+        return f"https://oxapay.com/pay/{track_id}"
+
 
 oxapay = OxaPay()
+
+
 def init_oxapay(key: str):
     oxapay.key = key

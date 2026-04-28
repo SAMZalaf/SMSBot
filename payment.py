@@ -19,9 +19,8 @@ from core import (
     balance_kb, back_kb, paginated_kb,
     payment_invoice_kb, payment_method_select_kb
 )
-from oxapay import oxapay, OxaPayError, PAYMENT_STATUS, init_oxapay
+from oxapay import oxapay, OxaPayError, OxaPayIPError, PAYMENT_STATUS, init_oxapay
 
-# Conversation states
 S_AMOUNT = "PAY_AMOUNT"
 END = ConversationHandler.END
 
@@ -36,7 +35,6 @@ async def _lang(tid):
 # ════════════════════════════════════════════════════════════════════════════
 
 async def pay_menu_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    # Cancel any active conversation states
     if ctx.user_data:
         for key in list(ctx.user_data.keys()):
             if not key.startswith("_"):
@@ -46,7 +44,6 @@ async def pay_menu_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await q.answer()
     lang = await _lang(q.from_user.id)
 
-    # Check OxaPay enabled
     if await get_setting("oxapay_enabled") != "1":
         await q.edit_message_text(t(lang, "pay_oxapay_off"),
                                    reply_markup=back_kb(lang, "bl:m"))
@@ -77,18 +74,18 @@ async def pay_select_method_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
                                    reply_markup=back_kb(lang, "bl:m"))
         return
 
-    ctx.user_data["pay_pm_id"]  = pm_id
-    ctx.user_data["pay_coin"]   = pm.get("coin","USDT")
-    ctx.user_data["pay_min"]    = pm.get("min_amount", 1.0)
-    ctx.user_data["pay_max"]    = pm.get("max_amount", 10000.0)
-    ctx.user_data["pay_fee"]    = pm.get("fee_paid_by", 0)
-    ctx.user_data["pay_life"]   = pm.get("lifetime_min", 30)
-    ctx.user_data["pay_under"]  = pm.get("underpaid_cover", 2.5)
-    ctx.user_data["pay_network"]= pm.get("network","")
+    ctx.user_data["pay_pm_id"]   = pm_id
+    ctx.user_data["pay_coin"]    = pm.get("coin", "USDT")
+    ctx.user_data["pay_min"]     = pm.get("min_amount", 1.0)
+    ctx.user_data["pay_max"]     = pm.get("max_amount", 10000.0)
+    ctx.user_data["pay_fee"]     = pm.get("fee_paid_by", 0)
+    ctx.user_data["pay_life"]    = pm.get("lifetime_min", 30)
+    ctx.user_data["pay_under"]   = pm.get("underpaid_cover", 2.5)
+    ctx.user_data["pay_network"] = pm.get("network", "")
 
     await q.edit_message_text(
         t(lang, "pay_enter_amount",
-          min=pm.get("min_amount",1.0), max=pm.get("max_amount",10000.0)),
+          min=pm.get("min_amount", 1.0), max=pm.get("max_amount", 10000.0)),
         parse_mode="HTML",
         reply_markup=back_kb(lang, "pay:m")
     )
@@ -117,17 +114,15 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         return S_AMOUNT
 
     coin    = ctx.user_data.get("pay_coin", "USDT")
-    network = ctx.user_data.get("pay_network","")
-
-    pay_currency_combined = f"{coin}/{network}" if network else coin
-
+    network = ctx.user_data.get("pay_network", "")
     fee     = ctx.user_data.get("pay_fee", 0)
     life    = ctx.user_data.get("pay_life", 30)
     under   = ctx.user_data.get("pay_under", 2.5)
 
+    pay_currency_combined = f"{coin}/{network}" if network else coin
+
     loading = await update.message.reply_text(t(lang, "pay_creating"))
 
-    # Reload oxapay with current key from settings
     from core import OXAPAY_API_KEY
     db_key = await get_setting("oxapay_key")
     key = db_key if (db_key and len(db_key) > 5) else OXAPAY_API_KEY
@@ -145,13 +140,22 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             fee_paid_by_payer=int(fee),
             underpaid_cover=float(under),
         )
+    except OxaPayIPError as e:
+        # IP not whitelisted — رسالة واضحة
+        await loading.edit_text(
+            f"🚫 <b>خطأ في إعداد بوابة الدفع</b>\n\n{e}",
+            parse_mode="HTML",
+            reply_markup=back_kb(lang, "bl:m")
+        )
+        return END
     except OxaPayError as e:
-        await loading.edit_text(t(lang, "pay_error", reason=str(e)))
+        await loading.edit_text(t(lang, "pay_error", reason=str(e)),
+                                 reply_markup=back_kb(lang, "bl:m"))
         return END
 
-    track_id    = str(res.get("trackId", ""))
-    pay_address = res.get("payAddress", "")
-    pay_amount  = res.get("payAmount", "?")
+    track_id    = str(res.get("trackId", res.get("track_id", "")))
+    pay_address = res.get("payAddress", res.get("pay_address", ""))
+    pay_amount  = res.get("payAmount",  res.get("pay_amount",  "?"))
     pay_link    = oxapay.format_pay_link(track_id)
 
     await create_payment(
@@ -181,7 +185,6 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     await loading.edit_text(text, parse_mode="HTML",
                              reply_markup=payment_invoice_kb(lang, track_id, pay_link))
 
-    # Register for background polling
     pending = ctx.application.bot_data.setdefault("pending_payments", set())
     pending.add(track_id)
 
@@ -189,11 +192,10 @@ async def pay_recv_amount(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# CHECK / CANCEL INVOICE
+# CHECK / CANCEL
 # ════════════════════════════════════════════════════════════════════════════
 
 async def pay_check_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    """pay:chk:{track_id}"""
     q = update.callback_query
     await q.answer()
     lang = await _lang(q.from_user.id)
@@ -205,16 +207,20 @@ async def pay_check_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         return
 
     key = await get_setting("oxapay_key") or ""
-    if key: init_oxapay(key)
+    if key:
+        init_oxapay(key)
 
     try:
         res = await oxapay.check_payment(track_id)
+    except OxaPayIPError as e:
+        await q.answer(f"🚫 IP Error", show_alert=True)
+        return
     except OxaPayError as e:
         await q.answer(f"❌ {e}", show_alert=True)
         return
 
     status = res.get("status", "Waiting")
-    icon   = PAYMENT_STATUS.get(status, ("❓","?"))[0]
+    icon   = PAYMENT_STATUS.get(status, ("❓", "?"))[0]
 
     await update_payment(track_id, status=status,
                           received_amount=res.get("receivedAmount"),
@@ -222,25 +228,21 @@ async def pay_check_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     if status == "Paid":
         await _confirm_payment(track_id, payment, lang, q.from_user.id, ctx.bot)
+        user = await get_user(q.from_user.id)
         await q.edit_message_text(
             t(lang, "pay_confirmed_notify",
               usd=payment["amount_usd"],
               coin=payment["pay_currency"],
               track_id=track_id,
-              balance=(await get_user(q.from_user.id) or {}).get("balance", 0)),
+              balance=(user or {}).get("balance", 0)),
             parse_mode="HTML",
             reply_markup=back_kb(lang, "bl:m")
         )
     else:
-        status_key = f"pay_status_{status.lower()}" if f"pay_status_{status.lower()}" in (
-            {**{k: "" for k in ["pay_status_waiting","pay_status_confirming","pay_status_paid",
-                                 "pay_status_expired","pay_status_error","pay_status_cancelled"]}}
-        ) else "pay_status_waiting"
-        await q.answer(f"{icon} {t(lang, status_key)}", show_alert=True)
+        await q.answer(f"{icon} {status}", show_alert=True)
 
 
 async def pay_cancel_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    """pay:cxl:{track_id}"""
     q = update.callback_query
     await q.answer()
     lang = await _lang(q.from_user.id)
@@ -248,7 +250,6 @@ async def pay_cancel_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     track_id = q.data.split(":", 2)[2]
     await update_payment(track_id, status="Canceled")
 
-    # Remove from pending
     pending = ctx.application.bot_data.get("pending_payments", set())
     pending.discard(track_id)
 
@@ -257,18 +258,17 @@ async def pay_cancel_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# DEPOSIT HISTORY
+# HISTORY
 # ════════════════════════════════════════════════════════════════════════════
 
 async def pay_history_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    """pay:h:{page}"""
     q = update.callback_query
     await q.answer()
     lang = await _lang(q.from_user.id)
 
     page = int(q.data.split(":")[-1])
     per  = 5
-    pays = await get_user_payments(q.from_user.id, limit=per+1, offset=page*per)
+    pays = await get_user_payments(q.from_user.id, limit=per + 1, offset=page * per)
     has_more = len(pays) > per
     pays     = pays[:per]
 
@@ -279,12 +279,12 @@ async def pay_history_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     lines = [t(lang, "pay_history_title"), ""]
     for p in pays:
-        status = p.get("status","Waiting")
-        icon   = PAYMENT_STATUS.get(status, ("❓","?"))[0]
+        status = p.get("status", "Waiting")
+        icon   = PAYMENT_STATUS.get(status, ("❓", "?"))[0]
         lines.append(t(lang, "pay_history_row",
-                        icon=icon, coin=p.get("pay_currency","?"),
-                        usd=p.get("amount_usd",0),
-                        date=fmt_date(p.get("created_at","")),
+                        icon=icon, coin=p.get("pay_currency", "?"),
+                        usd=p.get("amount_usd", 0),
+                        date=fmt_date(p.get("created_at", "")),
                         status=f"{icon} {status}"))
         lines.append("")
 
@@ -293,20 +293,19 @@ async def pay_history_cb(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# INTERNAL: credit balance on paid
+# INTERNAL
 # ════════════════════════════════════════════════════════════════════════════
 
 async def _confirm_payment(track_id, payment, lang, tid, bot):
-    """Credit balance if not already credited."""
     pay = await get_payment_by_track(track_id)
     if not pay or pay.get("paid_at"):
-        return  # already processed
+        return
     usd = payment.get("amount_usd", 0)
     now = datetime.now().isoformat()
     await update_payment(track_id, status="Paid", paid_at=now)
     new_bal = await update_balance(
         tid, usd, "deposit",
-        f"OxaPay deposit {payment.get('pay_currency','')} track:{track_id}",
+        f"OxaPay deposit {payment.get('pay_currency', '')} track:{track_id}",
         ref_id=track_id, method="oxapay"
     )
     if new_bal is not False:
@@ -314,7 +313,7 @@ async def _confirm_payment(track_id, payment, lang, tid, bot):
             await bot.send_message(
                 chat_id=tid,
                 text=t(lang, "pay_confirmed_notify",
-                       usd=usd, coin=payment.get("pay_currency",""),
+                       usd=usd, coin=payment.get("pay_currency", ""),
                        track_id=track_id, balance=new_bal),
                 parse_mode="HTML"
             )
@@ -322,12 +321,7 @@ async def _confirm_payment(track_id, payment, lang, tid, bot):
             pass
 
 
-# ════════════════════════════════════════════════════════════════════════════
-# BACKGROUND PAYMENT POLLER STEP (called by JobQueue)
-# ════════════════════════════════════════════════════════════════════════════
-
 async def payment_poller_step(bot):
-    """Execution step for polling pending payments."""
     try:
         from core import get_pending_payments
         payments = await get_pending_payments()
@@ -340,14 +334,14 @@ async def payment_poller_step(bot):
         init_oxapay(key)
 
         for p in payments:
-            track_id = p.get("track_id")
-            tid      = p.get("tg_id")
-            lang     = p.get("user_lang","ar")
+            track_id   = p.get("track_id")
+            tid        = p.get("tg_id")
+            lang       = p.get("user_lang", "ar")
+            expired_at = p.get("expired_at")
+
             if not track_id:
                 continue
 
-            # Check if expired_at has passed
-            expired_at = p.get("expired_at")
             if expired_at:
                 try:
                     if datetime.now() > datetime.fromisoformat(expired_at):
@@ -358,6 +352,8 @@ async def payment_poller_step(bot):
 
             try:
                 res = await oxapay.check_payment(track_id)
+            except OxaPayIPError:
+                break   # IP محجوب — لا فائدة من الاستمرار
             except OxaPayError:
                 continue
 
@@ -380,7 +376,7 @@ async def payment_poller_step(bot):
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# REGISTER HANDLERS
+# REGISTER
 # ════════════════════════════════════════════════════════════════════════════
 
 def register(app):
